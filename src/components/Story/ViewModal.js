@@ -14,6 +14,7 @@ const StoryViewerModal = ({ stories, initialIndex = 0, open, onClose }) => {
 
   useEffect(() => {
     setCurrentIndex(initialIndex);
+    // eslint-disable-next-line
   }, [initialIndex]);
 
   useEffect(() => {
@@ -25,6 +26,7 @@ const StoryViewerModal = ({ stories, initialIndex = 0, open, onClose }) => {
         clearInterval(progressInterval.current);
       }
     };
+    // eslint-disable-next-line
   }, [open, currentIndex, isPaused]);
 
   const startProgress = () => {
@@ -79,6 +81,7 @@ const StoryViewerModal = ({ stories, initialIndex = 0, open, onClose }) => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
+    // eslint-disable-next-line
   }, [open, currentIndex]);
 
   if (!story) return null;
@@ -133,7 +136,7 @@ const StoryViewerModal = ({ stories, initialIndex = 0, open, onClose }) => {
             <div className="flex items-center gap-3">
               <div className="relative w-10 h-10 rounded-full overflow-hidden">
                 <img
-                  src={story.user.avatar}
+                  src={story.user?.avatar}
                   alt={story.user.name}
                   className="object-cover"
                 />
@@ -141,7 +144,7 @@ const StoryViewerModal = ({ stories, initialIndex = 0, open, onClose }) => {
               <span className="text-white font-medium">{story.user.name}</span>
               <button
                 onClick={onClose}
-                className="ml-auto text-white hover:text-gray-300 transition-colors"
+                className="ml-auto text-white hover:text-gray-300 transition-colors bg-black/50 hover:bg-black/70 p-2 rounded-full"
               >
                 <FaTimes className="w-6 h-6" />
               </button>
@@ -174,9 +177,7 @@ const StoryViewerModal = ({ stories, initialIndex = 0, open, onClose }) => {
               <img
                 src={story.image}
                 alt={`Story by ${story.user.name}`}
-                className="object-contain"
-                quality={100}
-                priority
+                className="object-contain w-full h-full"
               />
             </div>
           )}

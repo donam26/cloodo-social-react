@@ -1,4 +1,6 @@
 import { FaFacebookMessenger } from "react-icons/fa";
+import { Avatar } from "antd";
+import { Link } from "react-router-dom";
 
 const ProfileLayout = ({ children }) => {
   return (
@@ -13,11 +15,10 @@ const ProfileLayout = ({ children }) => {
           </div>
           <div className="flex items-center gap-4">
             <div className="relative">
-              <Image
+              <Avatar
                 src="/images/avatar.jpg"
                 alt="User avatar"
-                width={40}
-                height={40}
+                size={40}
                 className="rounded-full"
               />
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>

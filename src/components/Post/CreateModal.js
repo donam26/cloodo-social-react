@@ -57,7 +57,7 @@ const CreatePostModal = ({ open, onClose }) => {
           autoSize={{ minRows: 3, maxRows: 6 }}
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          bordered={false}
+          variant={false}
           className="text-lg !p-0"
         />
 

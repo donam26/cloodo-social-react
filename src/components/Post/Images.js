@@ -12,19 +12,19 @@ const PostImages = ({ images }) => {
     setIsViewerOpen(true);
   };
 
-  if (!images.length) return null;
+  if (!images?.length) return null;
 
   if (images.length === 1) {
     return (
       <>
         <div
-          className="relative aspect-video cursor-pointer overflow-hidden group"
+          className="relative w-full h-[400px] cursor-pointer overflow-hidden group"
           onClick={() => handleImageClick(0)}
         >
           <img
             src={images[0]}
             alt="Ảnh bài viết"
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
         </div>
@@ -45,13 +45,13 @@ const PostImages = ({ images }) => {
           {images.map((image, index) => (
             <div
               key={index}
-              className="relative h-full cursor-pointer overflow-hidden group"
+              className="relative w-full h-full cursor-pointer overflow-hidden group"
               onClick={() => handleImageClick(index)}
             >
               <img
                 src={image}
                 alt={`Ảnh bài viết ${index + 1}`}
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
             </div>
@@ -72,13 +72,13 @@ const PostImages = ({ images }) => {
       <>
         <div className="grid grid-cols-2 gap-1 h-[400px]">
           <div
-            className="relative h-full cursor-pointer overflow-hidden group"
+            className="relative w-full h-full cursor-pointer overflow-hidden group"
             onClick={() => handleImageClick(0)}
           >
             <img
               src={images[0]}
               alt="Ảnh bài viết 1"
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
           </div>
@@ -86,13 +86,13 @@ const PostImages = ({ images }) => {
             {images.slice(1).map((image, index) => (
               <div
                 key={index}
-                className="relative cursor-pointer overflow-hidden group"
+                className="relative w-full h-full cursor-pointer overflow-hidden group"
                 onClick={() => handleImageClick(index + 1)}
               >
                 <img
                   src={image}
                   alt={`Ảnh bài viết ${index + 2}`}
-                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
               </div>
@@ -116,13 +116,13 @@ const PostImages = ({ images }) => {
         {images.slice(0, 4).map((image, index) => (
           <div
             key={index}
-            className="relative h-[200px] cursor-pointer overflow-hidden group"
+            className="relative w-full h-full cursor-pointer overflow-hidden group"
             onClick={() => handleImageClick(index)}
           >
             <img
               src={image}
               alt={`Ảnh bài viết ${index + 1}`}
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
             {index === 3 && images.length > 4 && (

@@ -60,7 +60,7 @@ const CommentSection = ({ postId, comments: initialComments }) => {
           <div key={comment.id} className="group">
             <div className="flex gap-2">
               <img
-                src={comment.user.avatar}
+                src={comment.user?.avatar}
                 alt={comment.user.name}
                 width={32}
                 height={32}
@@ -104,7 +104,7 @@ const CommentSection = ({ postId, comments: initialComments }) => {
                         {comment.replies.map((reply) => (
                           <div key={reply.id} className="flex gap-2">
                             <img
-                              src={reply.user.avatar}
+                              src={reply.user?.avatar}
                               alt={reply.user.name}
                               width={24}
                               height={24}

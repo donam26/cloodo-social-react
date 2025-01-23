@@ -1,4 +1,3 @@
-import { Input } from "antd";
 import { FaSearch } from "react-icons/fa";
 
 const Search = () => {

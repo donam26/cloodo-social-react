@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 const ImageViewModal = ({ images, initialIndex = 0, open, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loadedImages, setLoadedImages] = useState({});
 
   useEffect(() => {
     setCurrentIndex(initialIndex);
@@ -19,22 +19,42 @@ const ImageViewModal = ({ images, initialIndex = 0, open, onClose }) => {
 
     if (open) {
       window.addEventListener("keydown", handleKeyDown);
+      // Preload next and previous images
+      const preloadImage = (src) => {
+        const img = new Image();
+        img.src = src;
+      };
+      
+      if (images.length > 1) {
+        const nextIndex = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
+        const prevIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
+        preloadImage(images[nextIndex]);
+        preloadImage(images[prevIndex]);
+      }
     }
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open]);
+    // eslint-disable-next-line
+  }, [open, currentIndex, images]);
 
   const handlePrevious = () => {
-    setIsLoading(true);
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
   const handleNext = () => {
-    setIsLoading(true);
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
+
+  const handleImageLoad = (index) => {
+    setLoadedImages(prev => ({
+      ...prev,
+      [index]: true
+    }));
+  };
+
+  const isCurrentImageLoading = !loadedImages[currentIndex];
 
   return (
     <Modal
@@ -59,7 +79,7 @@ const ImageViewModal = ({ images, initialIndex = 0, open, onClose }) => {
             </div>
             <button
               onClick={onClose}
-              className="text-white hover:text-gray-300 transition-colors p-2"
+              className="text-white hover:text-gray-300 transition-colors p-2 bg-black/50 hover:bg-black/70 rounded-full"
             >
               <FaTimes className="w-6 h-6" />
             </button>
@@ -88,44 +108,41 @@ const ImageViewModal = ({ images, initialIndex = 0, open, onClose }) => {
 
         {/* Image */}
         <div className="relative w-full h-full flex items-center justify-center">
-          <div className="relative w-[90%] h-[90%]">
-            {isLoading && (
+          <div className="relative w-[90%] h-[90%] flex items-center justify-center">
+            {isCurrentImageLoading && (
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
               </div>
             )}
             <img
+              key={currentIndex} // Add key to force re-render on image change
               src={images[currentIndex]}
               alt={`Ảnh bài viết ${currentIndex + 1}`}
-              fill
-              className={`object-contain transition-opacity duration-300 ${
-                isLoading ? "opacity-0" : "opacity-100"
+              className={`max-w-full max-h-full object-contain transition-opacity duration-300 ${
+                isCurrentImageLoading ? "opacity-0" : "opacity-100"
               }`}
-              quality={100}
-              priority
-              onLoadingComplete={() => setIsLoading(false)}
+              onLoad={() => handleImageLoad(currentIndex)}
             />
           </div>
         </div>
 
         {/* Thumbnail preview */}
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/50 to-transparent">
-          <div className="flex items-center justify-center h-full gap-2 px-4">
+          <div className="flex items-center justify-center h-full gap-2 px-4 overflow-x-auto">
             {images.map((image, index) => (
               <div
                 key={index}
-                className={`relative w-16 h-16 rounded-lg overflow-hidden cursor-pointer transition-transform 
+                className={`relative w-16 h-16 rounded-lg overflow-hidden cursor-pointer transition-transform flex-shrink-0
                           ${index === currentIndex ? "ring-2 ring-blue-500 scale-110" : "opacity-70 hover:opacity-100"}`}
                 onClick={() => {
-                  setIsLoading(true);
                   setCurrentIndex(index);
                 }}
               >
                 <img
                   src={image}
                   alt={`Ảnh bài viết ${index + 1}`}
-                  fill
-                  className="object-cover"
+                  className="w-full h-full object-cover"
+                  onLoad={() => handleImageLoad(index)}
                 />
               </div>
             ))}

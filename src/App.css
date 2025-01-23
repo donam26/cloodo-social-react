@@ -1,0 +1,23 @@
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    /* Chiều rộng thanh cuộn */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f4f4f4;
+    /* Màu nền track */
+    border-radius: 4px;
+    /* Bo góc */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #b0bec5;
+    /* Màu thanh cuộn */
+    border-radius: 4px;
+    /* Bo góc thanh cuộn */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #78909c;
+    /* Màu thanh cuộn khi hover */
+}

@@ -1,4 +1,4 @@
-export const chats = [
+export const chatMessages = [
   {
     id: 1,
     name: "Nguyễn Văn A",

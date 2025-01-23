@@ -2,7 +2,7 @@ import { FaBell, FaFacebookMessenger, FaHome, FaUserFriends, FaVideo } from "rea
 import { MdGroups2 } from "react-icons/md";
 import { IoGridSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import Search from "./";
+import Search from "./Search";
 
 const Header = () => {
   return (

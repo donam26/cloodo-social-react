@@ -1,22 +1,22 @@
-import { FaBirthdayCake, FaCircle, FaEllipsisH, FaSearch, FaVideo, FaUserPlus } from "react-icons/fa";
+import { FaEllipsisH, FaSearch, FaVideo, FaUserPlus } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { friendSuggestions } from "../../../data/suggestFriend";
 import { contacts } from "../../../data/contact";
   
 const SidebarRight = () => {
   return (
-    <div className="flex flex-col gap-4 h-[calc(100vh-80px)] overflow-y-auto custom-scrollbar">
+    <div className="flex flex-col gap-4 h-[calc(100vh-80px)]">
 
       {/* Gợi ý kết bạn */}
       <div className="bg-white rounded-lg shadow-sm">
         <div className="p-4">
           <h2 className="text-gray-500 font-semibold mb-4">Những người bạn có thể biết</h2>
-          <div className="flex flex-col gap-4 max-h-[300px] overflow-y-auto custom-scrollbar">
+          <div className="flex flex-col gap-4 ">
             {friendSuggestions.map((suggestion) => (
               <div key={suggestion.id} className="relative">
                 <div className="flex items-start gap-3">
                   <img
-                    src={suggestion.avatar}
+                    src={suggestion?.avatar}
                     alt={suggestion.name}
                     width={60}
                     height={60}
@@ -66,7 +66,7 @@ const SidebarRight = () => {
           </div>
 
           {/* Danh sách người liên hệ */}
-          <div className="flex flex-col gap-2 max-h-[300px] overflow-y-auto custom-scrollbar">
+          <div className="flex flex-col gap-2 max-h-[400px] overflow-y-auto custom-scrollbar">
             {contacts.map((contact) => (
               <button
                 key={contact.id}
@@ -74,7 +74,7 @@ const SidebarRight = () => {
               >
                 <div className="relative">
                   <img
-                    src={contact.avatar}
+                    src={contact?.avatar}
                     alt={contact.name}
                     width={36}
                     height={36}
@@ -89,17 +89,6 @@ const SidebarRight = () => {
             ))}
           </div>
         </div>
-      </div>
-
-      {/* Cuộc trò chuyện nhóm */}
-      <div className="bg-white rounded-lg shadow-sm p-4">
-        <h2 className="text-gray-500 font-semibold mb-4">Cuộc trò chuyện nhóm</h2>
-        <button className="flex items-center gap-3 w-full p-2 hover:bg-gray-100 rounded-lg transition-colors">
-          <div className="w-9 h-9 bg-gray-200 rounded-full flex items-center justify-center">
-            <FaVideo className="w-5 h-5 text-gray-500" />
-          </div>
-          <span className="font-medium">Tạo phòng họp mặt</span>
-        </button>
       </div>
     </div>
   );
