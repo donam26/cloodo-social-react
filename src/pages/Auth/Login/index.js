@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaFacebook } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import axiosInstance from '../../../api/axiosInstance';
-import { useDispatch } from 'react-redux';
-import { setUser } from '../../../redux/features/auth/authSlice';
+import { loginUser } from '../../../services/authApi';
 
 const Login = () => {
     const [formData, setFormData] = useState({
@@ -15,7 +14,6 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -31,12 +29,7 @@ const Login = () => {
         setError('');
         
         try {
-            const response = await axiosInstance.post('/auth/login', formData);
-            const { access_token, user } = response.data;
-            alert('access_token');
-            
-            localStorage.setItem('access_token', access_token);
-            dispatch(setUser(user));
+            await loginUser(formData);
             navigate('/');
         } catch (err) {
             setError(err.response?.data?.message || 'Đăng nhập thất bại');
@@ -52,7 +45,7 @@ const Login = () => {
         const top = window.screenY + (window.outerHeight - height) / 2;
 
         const popup = window.open(
-            "http://127.0.0.1:8000/api/social-login/auth/google",
+            `${process.env.REACT_APP_ERP_API_URL}/social-login/auth/google`,
             'Google Login',
             `width=${width},height=${height},left=${left},top=${top},scrollbars=yes`
         );
@@ -71,13 +64,12 @@ const Login = () => {
                     const token = urlParams.get('token');
                     
                     if (token) {
-                        localStorage.setItem('access_token', token);
                         axiosInstance.get('/me', {
                             headers: {
                                 'Authorization': `Bearer ${token}`
                             }
                         }).then(response => {
-                            dispatch(setUser(response.data));
+                            localStorage.setItem('user_data', JSON.stringify(response.data.data));
                             popup.close();
                             navigate('/');
                         }).catch(error => {
@@ -89,36 +81,19 @@ const Login = () => {
                 }
             } catch (err) {
                 if (err.name === 'SecurityError') {
-                    return; // Bỏ qua lỗi CORS khi kiểm tra URL
+                    return; 
                 }
                 console.error(err);
             }
         }, 500);
     };
 
-    const [searchParams] = useSearchParams();
-
     useEffect(() => {
-        const token = searchParams.get("token");
-        if (token && !localStorage.getItem('access_token')) {
-            localStorage.setItem('access_token', token);
-            // Gọi API để lấy thông tin user
-            axiosInstance.get('/me', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            }).then(response => {
-                dispatch(setUser(response.data));
-                const newUrl = window.location.pathname;
-                window.history.replaceState({}, document.title, newUrl);
-                navigate('/');
-            }).catch(error => {
-                console.error('Lỗi lấy thông tin user:', error);
-                setError('Không thể lấy thông tin người dùng');
-                localStorage.removeItem('access_token');
-            });
+        const userData = localStorage.getItem('user_data');
+        if (userData) {
+            navigate('/');
         }
-    }, [searchParams, dispatch, navigate]);
+    }, []);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center p-4">
@@ -171,6 +146,7 @@ const Login = () => {
                                 onChange={handleChange}
                                 className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
                                 placeholder="Mật khẩu của bạn"
+                                autoComplete="off"
                             />
                         </div>
                     </div>

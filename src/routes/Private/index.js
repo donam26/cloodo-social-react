@@ -15,7 +15,7 @@ import VideoLayout from "../../layouts/Video";
 
 const PrivateWrapper = ({ children }) => {
     const location = useLocation();
-    const token = localStorage.getItem('access_token');
+    const userData = localStorage.getItem('user_data');
     
     // Nếu đang ở trang login và có token trong URL, cho phép render
     if (location.pathname === '/login' && location.search.includes('token=')) {
@@ -23,7 +23,7 @@ const PrivateWrapper = ({ children }) => {
     }
     
     // Kiểm tra authentication bằng token trong localStorage
-    return token ? children : <Navigate to="/login" state={{ from: location }} />;
+    return userData ? children : <Navigate to="/login" state={{ from: location }} />;
 };
 
 export const privateRoutes = [
