@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { FaFacebook } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import axiosInstance from '../../../api/axiosInstance';
@@ -45,9 +45,80 @@ const Login = () => {
         }
     };
 
-    const handleGoogleLogin = async () => {
-        window.location.href = "http://127.0.0.1:8000/api/social-login/auth/google";
+    const handleGoogleLogin = () => {
+        const width = 500;
+        const height = 600;
+        const left = window.screenX + (window.outerWidth - width) / 2;
+        const top = window.screenY + (window.outerHeight - height) / 2;
+
+        const popup = window.open(
+            "http://127.0.0.1:8000/api/social-login/auth/google",
+            'Google Login',
+            `width=${width},height=${height},left=${left},top=${top},scrollbars=yes`
+        );
+
+        const checkPopup = setInterval(() => {
+            try {
+                if (!popup || popup.closed) {
+                    clearInterval(checkPopup);
+                    return;
+                }
+
+                const currentUrl = popup.location.href;
+                if (currentUrl.includes('token=')) {
+                    clearInterval(checkPopup);
+                    const urlParams = new URLSearchParams(popup.location.search);
+                    const token = urlParams.get('token');
+                    
+                    if (token) {
+                        localStorage.setItem('access_token', token);
+                        axiosInstance.get('/me', {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        }).then(response => {
+                            dispatch(setUser(response.data));
+                            popup.close();
+                            navigate('/');
+                        }).catch(error => {
+                            console.error('Lỗi lấy thông tin user:', error);
+                            setError('Không thể lấy thông tin người dùng');
+                            popup.close();
+                        });
+                    }
+                }
+            } catch (err) {
+                if (err.name === 'SecurityError') {
+                    return; // Bỏ qua lỗi CORS khi kiểm tra URL
+                }
+                console.error(err);
+            }
+        }, 500);
     };
+
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+        const token = searchParams.get("token");
+        if (token && !localStorage.getItem('access_token')) {
+            localStorage.setItem('access_token', token);
+            // Gọi API để lấy thông tin user
+            axiosInstance.get('/me', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            }).then(response => {
+                dispatch(setUser(response.data));
+                const newUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, newUrl);
+                navigate('/');
+            }).catch(error => {
+                console.error('Lỗi lấy thông tin user:', error);
+                setError('Không thể lấy thông tin người dùng');
+                localStorage.removeItem('access_token');
+            });
+        }
+    }, [searchParams, dispatch, navigate]);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center p-4">

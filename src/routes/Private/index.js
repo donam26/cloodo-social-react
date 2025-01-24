@@ -1,4 +1,4 @@
-import { Route, Navigate } from "react-router-dom";
+import { Route, Navigate, useLocation } from "react-router-dom";
 import Home from "../../pages/Home";
 import Messenger from "../../pages/Messenger";
 import Groups from "../../pages/Groups";
@@ -14,8 +14,16 @@ import VideoPage from "../../pages/Video";
 import VideoLayout from "../../layouts/Video";
 
 const PrivateWrapper = ({ children }) => {
-    const isAuthenticated = false;
-    return isAuthenticated ? children : <Navigate to="/login" />;
+    const location = useLocation();
+    const token = localStorage.getItem('access_token');
+    
+    // Nếu đang ở trang login và có token trong URL, cho phép render
+    if (location.pathname === '/login' && location.search.includes('token=')) {
+        return children;
+    }
+    
+    // Kiểm tra authentication bằng token trong localStorage
+    return token ? children : <Navigate to="/login" state={{ from: location }} />;
 };
 
 export const privateRoutes = [
