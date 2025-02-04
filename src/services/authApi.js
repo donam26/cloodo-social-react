@@ -1,10 +1,11 @@
 import { notification } from "antd";
 import axiosInstance from "../api/axiosInstance";
+import { setUser } from "../redux/features/auth/authSlice";
 
-export const loginUser = async (data) => {
+export const loginUser = async (data, dispatch) => {
     try {
         const response = await axiosInstance.post('/auth/login', data);
-        localStorage.setItem('user_data', JSON.stringify(response.data.data));
+        dispatch(setUser(response.data.data));
         notification.success({
             message: "Đăng nhập thành công",
             description: "Chào mừng bạn đã quay trở lại!",
@@ -19,7 +20,6 @@ export const loginUser = async (data) => {
         throw error;
     }
 };
-
 
 export const getUser = async () => {
     const response = await axiosInstance.get('/me');

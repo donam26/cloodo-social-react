@@ -4,8 +4,12 @@ import { FaFacebook } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import axiosInstance from '../../../api/axiosInstance';
 import { loginUser } from '../../../services/authApi';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../../redux/features/auth/authSlice';
 
 const Login = () => {
+    const dispatch = useDispatch();
+
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -29,7 +33,7 @@ const Login = () => {
         setError('');
         
         try {
-            await loginUser(formData);
+            await loginUser(formData, dispatch);
             navigate('/');
         } catch (err) {
             setError(err.response?.data?.message || 'Đăng nhập thất bại');
@@ -69,7 +73,7 @@ const Login = () => {
                                 'Authorization': `Bearer ${token}`
                             }
                         }).then(response => {
-                            localStorage.setItem('user_data', JSON.stringify(response.data.data));
+                            dispatch(setUser(response.data.data));
                             popup.close();
                             navigate('/');
                         }).catch(error => {

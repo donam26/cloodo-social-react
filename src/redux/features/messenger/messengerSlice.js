@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  package: {}
+  messages: []
 };
 
 export const messengerSlice = createSlice({
   name: 'messenger',
   initialState,
   reducers: {
-    setPackage: (state, action) => {
-      state.package = action.payload;
+    setMessages: (state, action) => {
+      state.messages = action.payload;
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
@@ -21,9 +21,8 @@ export const messengerSlice = createSlice({
       return initialState;
     }
   },
-  
 });
 
-export const { setPackage } = messengerSlice.actions;
-export const selectPackage = state => state.messenger.package;
+export const { setMessages } = messengerSlice.actions;
+export const selectMessages = state => state.messenger.messages;
 export default messengerSlice;
