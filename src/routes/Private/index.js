@@ -1,4 +1,4 @@
-import { Route, Navigate, useLocation } from "react-router-dom";
+import { Route, Navigate, useLocation, useEffect } from "react-router-dom";
 import Home from "../../pages/Home";
 import Messenger from "../../pages/Messenger";
 import Groups from "../../pages/Groups";
@@ -12,7 +12,7 @@ import FriendPage from "../../pages/Friend";
 import LivestreamPage from "../../pages/Livestream";
 import VideoPage from "../../pages/Video";
 import VideoLayout from "../../layouts/Video";
-
+    
 const PrivateWrapper = ({ children }) => {
     const location = useLocation();
     const userData = localStorage.getItem('user_data');
@@ -21,8 +21,6 @@ const PrivateWrapper = ({ children }) => {
     if (location.pathname === '/login' && location.search.includes('token=')) {
         return children;
     }
-    
-    // Kiểm tra authentication bằng token trong localStorage
     return userData ? children : <Navigate to="/login" state={{ from: location }} />;
 };
 

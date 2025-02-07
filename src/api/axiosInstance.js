@@ -13,7 +13,9 @@ const axiosInstance = axios.create({
 // Request interceptor - Thêm token vào header
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('access_token');
+    const user_data = JSON.parse(localStorage.getItem('user_data'));
+    const token = user_data?.access_token;
+    
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -37,8 +39,10 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
+    const user_data = JSON.parse(localStorage.getItem('user_data'));
+
         // Thử refresh token với access token hiện tại
-        const currentToken = localStorage.getItem('access_token');
+        const currentToken = user_data?.access_token;
         const response = await axios.post(`${process.env.REACT_APP_ERP_API_URL}/auth/refresh`, {}, {
           headers: {
             'Authorization': `Bearer ${currentToken}`
@@ -47,7 +51,7 @@ axiosInstance.interceptors.response.use(
 
         // Lưu token mới
         const { access_token } = response.data;
-        localStorage.setItem('access_token', access_token);
+        localStorage.setItem('user_data', JSON.stringify({ ...user_data, access_token }));
 
         // Thử lại request ban đầu với token mới
         originalRequest.headers.Authorization = `Bearer ${access_token}`;
@@ -55,7 +59,7 @@ axiosInstance.interceptors.response.use(
 
       } catch (refreshError) {
         // Nếu refresh thất bại thì logout
-        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_data');
         // store.dispatch(setError('Phiên đăng nhập hết hạn'));
         window.location.href = '/login';
         return Promise.reject(refreshError);
