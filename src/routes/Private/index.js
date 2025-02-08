@@ -1,4 +1,4 @@
-import { Route, Navigate, useLocation, useEffect } from "react-router-dom";
+import { Route, Navigate, useLocation } from "react-router-dom";
 import Home from "../../pages/Home";
 import Messenger from "../../pages/Messenger";
 import Groups from "../../pages/Groups";

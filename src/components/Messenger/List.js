@@ -1,7 +1,8 @@
 import { FaSearch, FaEllipsisH, FaVideo, FaEdit } from "react-icons/fa";
 import { Avatar } from "antd";
 
-const ChatList = ({ chats, selectedChat, onSelectChat }) => {
+const ChatList = ({ conversations, selectedConversation, onSelectConversation }) => {
+  console.log(conversations);
   return (
     <>
       {/* Header */}
@@ -34,45 +35,45 @@ const ChatList = ({ chats, selectedChat, onSelectChat }) => {
 
       {/* Chat list */}
       <div className="flex-1 overflow-y-auto">
-        {chats.map((chat) => (
+        {conversations?.map((conversation) => (
           <button
-            key={chat.id}
-            onClick={() => onSelectChat(chat)}
+            key={conversation?.id}
+            onClick={() => onSelectConversation(conversation)}
             className={`flex items-center gap-3 w-full p-2 hover:bg-gray-100 relative
-              ${selectedChat.id === chat.id ? "bg-blue-50" : ""}`}
+              ${selectedConversation?.id === conversation?.id ? "bg-blue-50" : ""}`}
           >
             {/* Avatar */}
             <div className="relative">
                 <Avatar
-                src={chat?.avatar}
-                alt={chat.name}
+                src={conversation?.avatar}
+                alt={conversation?.name}
                 size={56}
                 className="rounded-full"
               />
-              {chat.isOnline && (
+              {conversation?.isOnline && (
                 <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white" />
               )}
             </div>
 
             {/* Chat info */}
             <div className="flex-1 text-left">
-              <h3 className="font-semibold">{chat.name}</h3>
+                <h3 className="font-semibold">{conversation?.name}</h3>
               <div className="flex items-center gap-2">
                 <p className="text-sm text-gray-500 truncate">
-                  {chat.lastMessage.content}
+                  {conversation?.lastMessage?.content}
                 </p>
                 <span className="text-xs text-gray-500">
-                  · {chat.lastMessage.time}
+                  · {conversation?.lastMessage?.time}
                 </span>
               </div>
             </div>
 
             {/* Unread indicator */}
-            {chat.unreadCount > 0 && (
+            {conversation.unreadCount > 0 && (
               <div className="absolute right-4 top-1/2 -translate-y-1/2">
                 <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
                   <span className="text-xs text-white font-medium">
-                    {chat.unreadCount}
+                    {conversation.unreadCount}
                   </span>
                 </div>
               </div>

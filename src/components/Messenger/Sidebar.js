@@ -2,8 +2,8 @@ import { FaSearch, FaBell, FaThumbsUp, FaImage, FaVideo, FaPhone } from "react-i
 import { IoMdSettings } from "react-icons/io";
 import { Avatar } from "antd";
 
-const Sidebar = ({ chat }) => {
-  if (!chat) return null;
+const Sidebar = ({ conversation }) => {
+  if (!conversation) return null;
 
   return (
     <div className="h-full p-4">
@@ -11,18 +11,18 @@ const Sidebar = ({ chat }) => {
       <div className="flex flex-col items-center pb-4 border-b">
         <div className="relative mb-2">
           <Avatar
-            src={chat?.avatar}
-            alt={chat.name}
+            src={conversation?.avatar}
+            alt={conversation.name}
             size={80}
             className="rounded-full"
           />
-          {chat.isOnline && (
+          {conversation.isOnline && (
             <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white" />
           )}
         </div>
-        <h2 className="text-xl font-semibold">{chat.name}</h2>
+        <h2 className="text-xl font-semibold">{conversation.name}</h2>
         <p className="text-sm text-gray-500">
-          {chat.isOnline ? "Đang hoạt động" : "Không hoạt động"}
+          {conversation.isOnline ? "Đang hoạt động" : "Không hoạt động"}
         </p>
       </div>
 

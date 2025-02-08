@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaPhone, FaVideo, FaInfoCircle, FaSmile, FaImage, FaThumbsUp, FaPaperPlane } from "react-icons/fa";
 import { Avatar } from "antd";
 
-const ChatWindow = ({ chat }) => {
+const ChatWindow = ({ conversation }) => {
   const [newMessage, setNewMessage] = useState("");
 
   const handleSendMessage = (e) => {
@@ -18,19 +18,19 @@ const ChatWindow = ({ chat }) => {
         <div className="flex items-center gap-3">
           <div className="relative">
             <Avatar
-              src={chat?.avatar}
-              alt={chat.name}
+              src={conversation?.avatar}
+              alt={conversation.name}
               size={40}
               className="rounded-full"
             />
-            {chat.isOnline && (
+            {conversation.isOnline && (
               <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white" />
             )}
           </div>
           <div>
-            <h2 className="font-semibold">{chat.name}</h2>
+            <h2 className="font-semibold">{conversation.name}</h2>
             <p className="text-xs text-gray-500">
-              {chat.isOnline ? "Đang hoạt động" : "Không hoạt động"}
+              {conversation.isOnline ? "Đang hoạt động" : "Không hoạt động"}
             </p>
           </div>
         </div>
@@ -49,7 +49,7 @@ const ChatWindow = ({ chat }) => {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {chat.messages.map((message, index) => (
+        {conversation.messages.map((message, index) => (
           <div
             key={index}
             className={`flex ${
@@ -58,8 +58,8 @@ const ChatWindow = ({ chat }) => {
           >
             {!message.isSender && (
               <Avatar
-                src={chat?.avatar}
-                alt={chat.name}
+                src={conversation?.avatar}
+                alt={conversation.name}
                 size={28}
                 className="rounded-full mr-2 self-end"
               />

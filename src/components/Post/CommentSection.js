@@ -56,36 +56,36 @@ const CommentSection = ({ postId, comments: initialComments }) => {
 
       {/* Danh sách bình luận */}
       <div className="space-y-4">
-        {comments.map((comment) => (
-          <div key={comment.id} className="group">
+        {comments?.map((comment) => (
+          <div key={comment?.id} className="group">
             <div className="flex gap-2">
               <img
-                src={comment.user?.avatar}
-                alt={comment.user.name}
+                src={comment?.user?.avatar}
+                alt={comment?.user?.name}
                 width={32}
                 height={32}
                 className="w-8 h-8 rounded-full"
               />
               <div className="flex-1">
                 <div className="inline-block bg-gray-100 rounded-2xl px-4 py-2">
-                  <h4 className="font-semibold text-sm">{comment.user.name}</h4>
-                  <p className="text-sm">{comment.content}</p>
+                  <h4 className="font-semibold text-sm">{comment?.user?.name}</h4>
+                  <p className="text-sm">{comment?.content}</p>
                 </div>
                 
                 {/* Actions */}
                 <div className="flex gap-4 mt-1 text-xs text-gray-500">
                   <button className="font-semibold hover:underline">Thích</button>
                   <button className="font-semibold hover:underline">Phản hồi</button>
-                  <span>{comment.createdAt}</span>
+                  <span>{comment?.createdAt}</span>
                 </div>
 
                 {/* Like count */}
-                {comment.likes > 0 && (
+                {comment?.likes > 0 && (
                   <div className="flex items-center gap-1 mt-1">
                     <div className="w-4 h-4 bg-blue-500 rounded-full flex items-center justify-center">
                       <FaThumbsUp className="w-2 h-2 text-white" />
                     </div>
-                    <span className="text-xs text-gray-500">{comment.likes}</span>
+                    <span className="text-xs text-gray-500">{comment?.likes}</span>
                   </div>
                 )}
 
@@ -93,32 +93,32 @@ const CommentSection = ({ postId, comments: initialComments }) => {
                 {comment.replies && comment.replies.length > 0 && (
                   <>
                     <button
-                      onClick={() => toggleReplies(comment.id)}
+                      onClick={() => toggleReplies(comment?.id)}
                       className="text-sm text-gray-500 mt-1 hover:underline"
                     >
-                      {showReplies[comment.id] ? "Ẩn phản hồi" : `Xem ${comment.replies.length} phản hồi`}
+                      {showReplies[comment?.id] ? "Ẩn phản hồi" : `Xem ${comment?.replies?.length} phản hồi`}
                     </button>
 
                     {showReplies[comment.id] && (
                       <div className="ml-8 mt-2 space-y-4">
-                        {comment.replies.map((reply) => (
-                          <div key={reply.id} className="flex gap-2">
+                        {comment?.replies?.map((reply) => (
+                          <div key={reply?.id} className="flex gap-2">
                             <img
-                              src={reply.user?.avatar}
-                              alt={reply.user.name}
+                              src={reply?.user?.avatar}
+                              alt={reply?.user?.name}
                               width={24}
                               height={24}
                               className="w-6 h-6 rounded-full"
                             />
                             <div>
                               <div className="inline-block bg-gray-100 rounded-2xl px-4 py-2">
-                                <h4 className="font-semibold text-sm">{reply.user.name}</h4>
-                                <p className="text-sm">{reply.content}</p>
+                                <h4 className="font-semibold text-sm">{reply?.user?.name}</h4>
+                                <p className="text-sm">{reply?.content}</p>
                               </div>
                               <div className="flex gap-4 mt-1 text-xs text-gray-500">
                                 <button className="font-semibold hover:underline">Thích</button>
                                 <button className="font-semibold hover:underline">Phản hồi</button>
-                                <span>{reply.createdAt}</span>
+                                <span>{reply?.createdAt}</span>
                               </div>
                             </div>
                           </div>

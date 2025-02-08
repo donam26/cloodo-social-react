@@ -1,0 +1,62 @@
+.messenger-dropdown .ant-dropdown-menu {
+    padding: 2px !important;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+.messenger-dropdown .ant-dropdown-menu-item {
+    padding: 2px !important;
+    margin: 0 !important;
+}
+
+.messenger-dropdown .ant-dropdown-menu-item:hover {
+    background-color: transparent !important;
+}
+
+.messenger-dropdown-content {
+    background: white;
+    border-radius: 8px;
+    min-width: 350px;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+/* Custom scrollbar */
+.messenger-dropdown-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.messenger-dropdown-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.messenger-dropdown-content::-webkit-scrollbar-thumb {
+    background: #bcc0c4;
+    border-radius: 4px;
+}
+
+.messenger-dropdown-content::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+.chat-popup {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 12px;
+    z-index: 1000;
+}
+
+.chat-popup::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-popup::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-popup::-webkit-scrollbar-thumb {
+    background: #bcc0c4;
+    border-radius: 4px;
+}
+
+.chat-popup::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+} 

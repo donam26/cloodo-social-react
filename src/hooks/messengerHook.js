@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { getConversation } from '../services/messengerApi';
 
-export const useConversation = () => {
+export const useGetConversation = () => {
   return useQuery({
     queryKey: ['conversations'],
     queryFn: getConversation,

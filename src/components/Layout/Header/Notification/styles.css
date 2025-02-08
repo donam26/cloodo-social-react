@@ -1,0 +1,78 @@
+.notification-dropdown {
+    transform-origin: top right;
+}
+
+.notification-dropdown .ant-dropdown-menu {
+    padding: 0 !important;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+.notification-dropdown .ant-dropdown-menu-item {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.notification-dropdown .ant-dropdown-menu-item:hover {
+    background-color: transparent !important;
+}
+
+.notification-dropdown-content {
+    background: white;
+    border-radius: 8px;
+    width: 360px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+    will-change: transform, opacity;
+    transform-origin: top right;
+    animation: slideDown 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* Custom scrollbar */
+.notification-dropdown-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.notification-dropdown-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.notification-dropdown-content::-webkit-scrollbar-thumb {
+    background: #bcc0c4;
+    border-radius: 4px;
+}
+
+.notification-dropdown-content::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Style cho notification chưa đọc */
+.notification-item-unread {
+    position: relative;
+}
+
+.notification-item-unread::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    background-color: #1877f2;
+    border-radius: 50%;
+}

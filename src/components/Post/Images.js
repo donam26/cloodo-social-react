@@ -48,8 +48,9 @@ const PostImages = ({ images }) => {
               className="relative w-full h-full cursor-pointer overflow-hidden group"
               onClick={() => handleImageClick(index)}
             >
+              {console.log(image)}
               <img
-                src={image}
+                src={image?.image}
                 alt={`Ảnh bài viết ${index + 1}`}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />

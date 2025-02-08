@@ -1,14 +1,18 @@
 import { FaEllipsisH, FaThumbsUp, FaComment, FaShare, FaVideo, FaPhotoVideo, FaSeedling } from "react-icons/fa";
-import { useState } from "react";           
+import { useState } from "react";
 import CreatePostModal from "./CreateModal";
 import PostImages from "./Images";
 import CommentSection from "./CommentSection";
-import { posts } from "../../data/posts";
 import { Link } from "react-router-dom";
+import { useGetPost } from "../../hooks/postHook.js";
+import { Avatar } from "antd";
+import { getTimeAgo } from "../../utils/time.js";
 
 const Post = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [showComments, setShowComments] = useState({});
+
+  const { data: posts } = useGetPost();
 
   const toggleComments = (postId) => {
     setShowComments(prev => ({
@@ -59,22 +63,25 @@ const Post = () => {
       </div>
 
       {/* Danh sách bài viết */}
-      {posts.map((post) => (
-        <div key={post.id} className="bg-white rounded-lg shadow-sm">
+      {posts?.data?.map((post) => (
+        <div key={post?.id} className="bg-white rounded-lg shadow-sm">
           {/* Header */}
           <div className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <img
-                  src={post?.user?.avatar}
-                  alt={post?.user?.name}
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
+                <Link to={`/profile/${post?.author?.id}`}>
+                  <Avatar
+                    src={post?.author?.image}
+                    alt={post?.author?.name}
+                    size={40}
+                    className="rounded-full"
+                  />
+                </Link>
                 <div>
-                  <h3 className="font-medium">{post?.user?.name}</h3>
-                  <p className="text-gray-500 text-sm">{post?.createdAt}</p>
+                  <Link to={`/profile/${post?.author?.id}`}>
+                    <h3 className="font-medium">{post?.author?.name}</h3>
+                  </Link>
+                  <p className="text-gray-500 text-sm">{getTimeAgo(post?.created_at)}</p>
                 </div>
               </div>
               <button className="p-2 hover:bg-gray-100 rounded-full">
@@ -109,7 +116,7 @@ const Post = () => {
               <FaThumbsUp className="w-5 h-5 text-gray-500" />
               <span className="font-medium">Thích</span>
             </button>
-            <button 
+            <button
               onClick={() => toggleComments(post?.id)}
               className="flex-1 flex items-center justify-center gap-2 p-2 hover:bg-gray-100 rounded-lg"
             >
