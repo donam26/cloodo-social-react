@@ -19,3 +19,18 @@ export const updatePost = async (id, data) => {
   const response = await axiosInstance.put(`/posts/${id}`, data);
   return response.data;
 };
+
+export const reactPost = async (postId) => {
+  const response = await axiosInstance.post(`/posts/${postId}/react`);
+  return response.data;
+};
+
+export const createComment = async (data) => {
+  const response = await axiosInstance.post(`/posts/${data.postId}/comment`, data);
+  return response.data;
+};
+
+export const deleteComment = async (postId, commentId) => {
+  const response = await axiosInstance.delete(`/posts/${postId}/comment/${commentId}`);
+  return response.data;
+};

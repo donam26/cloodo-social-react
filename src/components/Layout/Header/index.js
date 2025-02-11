@@ -4,7 +4,7 @@ import { IoGridSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import Search from "./Search";
 import { useSelector } from "react-redux";
-import { Dropdown, Space } from "antd";
+import { Avatar, Dropdown, Space } from "antd";
 import ListMessenger from "./Messenger";
 import Notification from "./Notification";
 
@@ -99,8 +99,8 @@ const Header = () => {
             <Space direction="vertical">
               <Dropdown menu={{ items }} placement="bottomRight" arrow={{ pointAtCenter: true }} trigger={['click']}>
                 <button className="ml-2">
-                  <img
-                    src={userData?.user?.avatar || "/images/avatar.jpg"}
+                  <Avatar
+                    src={userData?.user?.image}
                     alt="Avatar"
                     width={40}
                     height={40}

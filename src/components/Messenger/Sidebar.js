@@ -1,9 +1,13 @@
 import { FaSearch, FaBell, FaThumbsUp, FaImage, FaVideo, FaPhone } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { Avatar } from "antd";
+import { Link } from "react-router-dom";
 
 const Sidebar = ({ conversation }) => {
   if (!conversation) return null;
+
+  // Lấy thông tin người dùng đầu tiên trong danh sách participants
+  const firstParticipant = conversation.participants?.[0];
 
   return (
     <div className="h-full p-4">
@@ -11,19 +15,13 @@ const Sidebar = ({ conversation }) => {
       <div className="flex flex-col items-center pb-4 border-b">
         <div className="relative mb-2">
           <Avatar
-            src={conversation?.avatar}
-            alt={conversation.name}
+            src={firstParticipant?.image}
             size={80}
             className="rounded-full"
           />
-          {conversation.isOnline && (
-            <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white" />
-          )}
         </div>
-        <h2 className="text-xl font-semibold">{conversation.name}</h2>
-        <p className="text-sm text-gray-500">
-          {conversation.isOnline ? "Đang hoạt động" : "Không hoạt động"}
-        </p>
+        <h2 className="text-xl font-semibold">{firstParticipant?.name}</h2>
+        <p className="text-sm text-gray-500">{firstParticipant?.email}</p>
       </div>
 
       {/* Actions */}
@@ -53,6 +51,22 @@ const Sidebar = ({ conversation }) => {
             </div>
             <span className="text-xs">Tùy chỉnh</span>
           </button>
+        </div>
+      </div>
+
+      {/* Members */}
+      <div className="py-4 border-b">
+        <h3 className="text-lg font-semibold mb-4">Thành viên nhóm</h3>
+        <div className="space-y-3">
+          {conversation.participants?.map((participant) => (
+            <Link key={participant.id} to={`/profile/${participant.id}`} className="flex items-center gap-2">
+              <Avatar src={participant.image} size={40} className="rounded-full" />
+              <div>
+                <p className="font-medium">{participant.name}</p>
+                <p className="text-sm text-gray-500">{participant.email}</p>
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
 

@@ -19,3 +19,9 @@ export const sendMessage = async (data) => {
   const response = await axiosInstance.post('/messages', data);
   return response.data;
 };
+
+export const getMessages = async (id) => {
+  const response = await axiosInstance.get(`/messages/${id}`);
+  return response.data;
+};
+

@@ -8,6 +8,7 @@ import MessengerLayout from "../../layouts/Messenger";
 import FriendLayout from "../../layouts/Friend";
 import GroupLayout from "../../layouts/Group";
 import ProfileLayout from "../../layouts/Profile";
+import ProfileDetail from "../../pages/Profile/Detail";
 import FriendPage from "../../pages/Friend";
 import LivestreamPage from "../../pages/Livestream";
 import VideoPage from "../../pages/Video";
@@ -59,6 +60,17 @@ export const privateRoutes = [
         }
     />,
     <Route
+        path="/messenger/:id"
+        key="messenger"
+        element={
+            <PrivateWrapper>
+                <MessengerLayout>
+                    <Messenger />
+                </MessengerLayout>
+            </PrivateWrapper>
+        }
+    />,
+    <Route
         path="/video"
         key="video"
         element={
@@ -96,6 +108,17 @@ export const privateRoutes = [
             <PrivateWrapper>
                 <ProfileLayout>
                     <Profile />
+                </ProfileLayout>
+            </PrivateWrapper>
+        }
+    />,
+    <Route
+        path="/profile/:id"
+        key="profile"
+        element={
+            <PrivateWrapper>
+                <ProfileLayout>
+                    <ProfileDetail />
                 </ProfileLayout>
             </PrivateWrapper>
         }

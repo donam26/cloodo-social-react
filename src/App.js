@@ -7,15 +7,15 @@ import WebSocketProvider from './providers/WebSocketProvider';
 
 function App() {
   return (
-    <WebSocketProvider>
-      <Router>
+    <Router>
+      <WebSocketProvider>
         <Routes>
           {publicRoutes}
           {privateRoutes}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </Router>
-    </WebSocketProvider>
+      </WebSocketProvider>
+    </Router>
   );
 }
 

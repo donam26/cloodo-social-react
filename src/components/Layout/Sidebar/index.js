@@ -11,7 +11,7 @@ const Sidebar = () => {
   return (
     <div className="flex flex-col gap-4">
       <Link className="flex items-center justify-start gap-2 hover:bg-gray-200 p-2 rounded-md " to="/profile">
-        <Avatar src={userData?.user?.avatar || "/images/avatar.jpg"} alt="avatar" size={40} className="rounded-full" />
+        <Avatar src={userData?.user?.image || "/images/avatar.jpg"} alt="avatar" size={40} className="rounded-full" />
         <span className="font-medium">{userData?.user?.name}</span>
       </Link>
       <Link className="flex items-center gap-2 hover:bg-gray-200 p-2 rounded-md" to="/friend">

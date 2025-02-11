@@ -1,12 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import ChatList from "../../components/Messenger/List";
 import ChatWindow from "../../components/Messenger/Window";
 import Sidebar from "../../components/Messenger/Sidebar";
-import { useGetConversation } from "../../hooks/messengerHook";
+import { useGetConversation, useGetConversationById } from "../../hooks/messengerHook";
 
 const MessengerPage = () => {
   const { data: conversations } = useGetConversation();
+  const { id } = useParams();
+  const { data: conversationDetail } = useGetConversationById(id);
   const [selectedConversation, setSelectedConversation] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (id && conversationDetail?.data) {
+      setSelectedConversation(conversationDetail.data);
+    } else if (!id && conversations?.data?.length > 0) {
+      navigate(`/messenger/${conversations.data[0].uuid}`);
+    }
+  }, [id, conversationDetail, conversations, navigate]);
 
   return (
     <div className="flex h-full bg-white">
@@ -15,14 +27,13 @@ const MessengerPage = () => {
         <ChatList
           conversations={conversations?.data}
           selectedConversation={selectedConversation}
-          onSelectConversation={setSelectedConversation}
         />
       </div>
 
       {/* Cửa sổ chat */}
       <div className="flex-1 hidden md:block">
         {selectedConversation ? (
-          <ChatWindow conversation={selectedConversation} />
+          <ChatWindow id={selectedConversation.uuid} />
         ) : (
           <div className="flex items-center justify-center h-full">
             <p className="text-gray-500">Chọn một cuộc trò chuyện để bắt đầu</p>
@@ -36,6 +47,6 @@ const MessengerPage = () => {
       </div>
     </div>
   );
-} 
+}
 
 export default MessengerPage;

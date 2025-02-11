@@ -14,22 +14,25 @@ const PostImages = ({ images }) => {
 
   if (!images?.length) return null;
 
+  // Chuẩn hóa mảng ảnh để lấy đúng URL
+  const normalizedImages = images.map(img => (typeof img === 'string' ? img : img?.image));
+
   if (images.length === 1) {
     return (
       <>
         <div
-          className="relative w-full h-[400px] cursor-pointer overflow-hidden group"
+          className="relative w-full max-h-[500px] cursor-pointer overflow-hidden group mt-3"
           onClick={() => handleImageClick(0)}
         >
           <img
-            src={images[0]}
+            src={normalizedImages[0]}
             alt="Ảnh bài viết"
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="w-full h-full object-contain"
           />
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
         </div>
         <ImageViewModal
-          images={images}
+          images={normalizedImages}
           initialIndex={selectedImageIndex}
           open={isViewerOpen}
           onClose={() => setIsViewerOpen(false)}
@@ -41,25 +44,24 @@ const PostImages = ({ images }) => {
   if (images.length === 2) {
     return (
       <>
-        <div className="grid grid-cols-2 gap-1 h-[400px]">
+        <div className="grid grid-cols-2 gap-1 mt-3">
           {images.map((image, index) => (
             <div
               key={index}
-              className="relative w-full h-full cursor-pointer overflow-hidden group"
+              className="relative aspect-[4/3] cursor-pointer overflow-hidden group"
               onClick={() => handleImageClick(index)}
             >
-              {console.log(image)}
               <img
-                src={image?.image}
+                src={normalizedImages[index]}
                 alt={`Ảnh bài viết ${index + 1}`}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
             </div>
           ))}
         </div>
         <ImageViewModal
-          images={images}
+          images={normalizedImages}
           initialIndex={selectedImageIndex}
           open={isViewerOpen}
           onClose={() => setIsViewerOpen(false)}
@@ -71,29 +73,29 @@ const PostImages = ({ images }) => {
   if (images.length === 3) {
     return (
       <>
-        <div className="grid grid-cols-2 gap-1 h-[400px]">
+        <div className="grid grid-cols-2 gap-1 mt-3">
           <div
-            className="relative w-full h-full cursor-pointer overflow-hidden group"
+            className="relative aspect-square cursor-pointer overflow-hidden group"
             onClick={() => handleImageClick(0)}
           >
             <img
-              src={images[0]}
+              src={normalizedImages[0]}
               alt="Ảnh bài viết 1"
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
           </div>
-          <div className="grid grid-rows-2 gap-1 h-full">
+          <div className="grid grid-rows-2 gap-1">
             {images.slice(1).map((image, index) => (
               <div
                 key={index}
-                className="relative w-full h-full cursor-pointer overflow-hidden group"
+                className="relative aspect-[4/3] cursor-pointer overflow-hidden group"
                 onClick={() => handleImageClick(index + 1)}
               >
                 <img
-                  src={image}
+                  src={normalizedImages[index + 1]}
                   alt={`Ảnh bài viết ${index + 2}`}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
               </div>
@@ -101,7 +103,7 @@ const PostImages = ({ images }) => {
           </div>
         </div>
         <ImageViewModal
-          images={images}
+          images={normalizedImages}
           initialIndex={selectedImageIndex}
           open={isViewerOpen}
           onClose={() => setIsViewerOpen(false)}
@@ -113,17 +115,17 @@ const PostImages = ({ images }) => {
   // 4 ảnh trở lên
   return (
     <>
-      <div className="grid grid-cols-2 gap-1 h-[400px]">
+      <div className="grid grid-cols-2 gap-1 mt-3">
         {images.slice(0, 4).map((image, index) => (
           <div
             key={index}
-            className="relative w-full h-full cursor-pointer overflow-hidden group"
+            className="relative aspect-[4/3] cursor-pointer overflow-hidden group"
             onClick={() => handleImageClick(index)}
           >
             <img
-              src={image}
+              src={normalizedImages[index]}
               alt={`Ảnh bài viết ${index + 1}`}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
             {index === 3 && images.length > 4 && (
@@ -140,7 +142,7 @@ const PostImages = ({ images }) => {
         ))}
       </div>
       <ImageViewModal
-        images={images}
+        images={normalizedImages}
         initialIndex={selectedImageIndex}
         open={isViewerOpen}
         onClose={() => setIsViewerOpen(false)}

@@ -7,6 +7,7 @@ import { MdOutlineZoomOutMap } from "react-icons/md";
 import { IoCreateOutline } from "react-icons/io5";
 import { useState } from "react";
 import ChatPopup from "./ChatPopup";
+import { Link } from "react-router-dom";
 
 
 
@@ -25,13 +26,13 @@ const ListMessenger = () => {
             className="flex items-center gap-3 p-2 w-[350px] cursor-pointer hover:bg-gray-100"
             onClick={() => handleChatClick(conversation)}
           >
-            <Avatar src={conversation.last_message.sender_id.image} size={48} />
+            <Avatar src={conversation?.last_message?.sender_id?.image} size={48} />
             <div className="flex flex-col flex-1 min-w-0">
                 <div className="flex justify-between items-center">
-                    <span className="font-semibold text-[15px] text-gray-900">{conversation.name}</span>
-                    <span className="text-xs text-gray-500 whitespace-nowrap ml-2">{getTimeAgo(conversation.last_message.created_at)}</span>
+                    <span className="font-semibold text-[15px] text-gray-900">{conversation?.last_message?.sender?.name}</span>
+                    <span className="text-xs text-gray-500 whitespace-nowrap ml-2">{getTimeAgo(conversation?.last_message?.created_at)}</span>
                 </div>
-                <span className="text-sm text-gray-500 truncate">{conversation.last_message.content}</span>
+                <span className="text-sm text-gray-500 truncate">{conversation?.last_message?.content}</span>
             </div>
           </div>
         ),
@@ -56,9 +57,11 @@ const ListMessenger = () => {
                                 <button className="w-full hover:bg-gray-100 rounded-md p-1">
                                     <IoCreateOutline className="w-5 h-5" />
                                 </button>
-                                <button className="w-full hover:bg-gray-100 rounded-md p-1">
-                                    <MdOutlineZoomOutMap className="w-5 h-5" />
-                                </button>
+                                <Link to="/messenger">
+                                    <button className="w-full hover:bg-gray-100 rounded-md p-1">
+                                        <MdOutlineZoomOutMap className="w-5 h-5" />
+                                    </button>
+                                </Link>
                             </div>
                         </div>
                         {menu}

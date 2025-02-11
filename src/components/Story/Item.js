@@ -10,7 +10,7 @@ const StoryItem = ({ story, onClick }) => {
         <>
           <div className="absolute inset-0 bg-white">
             <img
-              src={story.user?.avatar}
+              src={story.user?.image}
               alt={story.user.name}
               className="object-cover"
             />
@@ -36,7 +36,7 @@ const StoryItem = ({ story, onClick }) => {
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/60" />
           <div className="absolute top-4 left-4 w-10 h-10 rounded-full border-4 border-blue-500 overflow-hidden">
             <img
-              src={story.user?.avatar}
+              src={story.user?.image}
               alt={story.user.name}
               className="object-cover"
             />

@@ -1,28 +1,35 @@
 import { useState } from "react";
 import { FaThumbsUp } from "react-icons/fa";
+import { useDeleteComment } from "../../hooks/postHook";
+import { useSelector } from "react-redux";
+import { Avatar, message } from "antd";
+import { getTimeAgo } from "../../utils/time";
 
-const CommentSection = ({ postId, comments: initialComments }) => {
-  const [comments, setComments] = useState(initialComments);
+const CommentSection = ({ postId, comments, onCreateComment }) => {
   const [newComment, setNewComment] = useState("");
   const [showReplies, setShowReplies] = useState({});
 
-  const handleSubmitComment = (e) => {
+  const { mutate: deleteComment } = useDeleteComment();
+  const user = useSelector((state) => state?.user?.user);
+
+  const handleSubmitComment = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
 
-    const comment = {
-      id: Date.now(),
-      user: {
-        name: "Người dùng",
-        avatar: "/images/avatar.jpg",
-      },
-      content: newComment,
-      likes: 0,
-      createdAt: "Vừa xong",
-    };
-
-    setComments([...comments, comment]);
+    onCreateComment(postId, newComment.trim());
+    
     setNewComment("");
+  };
+
+  const handleDeleteComment = (commentId) => {
+    deleteComment({ postId, commentId }, {
+      onSuccess: () => {
+        message.success("Đã xóa bình luận");
+      },
+      onError: () => {
+        message.error("Có lỗi xảy ra khi xóa bình luận");
+      }
+    });
   };
 
   const toggleReplies = (commentId) => {
@@ -36,12 +43,11 @@ const CommentSection = ({ postId, comments: initialComments }) => {
     <div className="px-4 py-2">
       {/* Form bình luận */}
       <form onSubmit={handleSubmitComment} className="flex gap-2 mb-4">
-        <img
-          src="/images/avatar.jpg"
-          alt="User avatar"
-          width={32}
-          height={32}
-          className="w-8 h-8 rounded-full"
+        <Avatar 
+          src={user?.user?.image} 
+          alt={user?.user?.name}
+          size={32}
+          className="rounded-full"
         />
         <div className="flex-1 relative">
           <input
@@ -59,16 +65,15 @@ const CommentSection = ({ postId, comments: initialComments }) => {
         {comments?.map((comment) => (
           <div key={comment?.id} className="group">
             <div className="flex gap-2">
-              <img
-                src={comment?.user?.avatar}
-                alt={comment?.user?.name}
-                width={32}
-                height={32}
-                className="w-8 h-8 rounded-full"
+              <Avatar
+                src={comment?.author?.image}
+                alt={comment?.author?.name}
+                size={32}
+                className="rounded-full"
               />
               <div className="flex-1">
                 <div className="inline-block bg-gray-100 rounded-2xl px-4 py-2">
-                  <h4 className="font-semibold text-sm">{comment?.user?.name}</h4>
+                  <h4 className="font-semibold text-sm">{comment?.author?.name}</h4>
                   <p className="text-sm">{comment?.content}</p>
                 </div>
                 
@@ -76,7 +81,15 @@ const CommentSection = ({ postId, comments: initialComments }) => {
                 <div className="flex gap-4 mt-1 text-xs text-gray-500">
                   <button className="font-semibold hover:underline">Thích</button>
                   <button className="font-semibold hover:underline">Phản hồi</button>
-                  <span>{comment?.createdAt}</span>
+                  {comment?.author?.id === user?.user?.id && (
+                    <button 
+                      onClick={() => handleDeleteComment(comment?.id)}
+                      className="font-semibold hover:underline text-red-500"
+                    >
+                      Xóa
+                    </button>
+                  )}
+                  <span>{getTimeAgo(comment?.created_at)}</span>
                 </div>
 
                 {/* Like count */}
@@ -90,7 +103,7 @@ const CommentSection = ({ postId, comments: initialComments }) => {
                 )}
 
                 {/* Replies */}
-                {comment.replies && comment.replies.length > 0 && (
+                {comment?.replies?.length > 0 && (
                   <>
                     <button
                       onClick={() => toggleReplies(comment?.id)}
@@ -99,26 +112,33 @@ const CommentSection = ({ postId, comments: initialComments }) => {
                       {showReplies[comment?.id] ? "Ẩn phản hồi" : `Xem ${comment?.replies?.length} phản hồi`}
                     </button>
 
-                    {showReplies[comment.id] && (
+                    {showReplies[comment?.id] && (
                       <div className="ml-8 mt-2 space-y-4">
                         {comment?.replies?.map((reply) => (
                           <div key={reply?.id} className="flex gap-2">
-                            <img
-                              src={reply?.user?.avatar}
-                              alt={reply?.user?.name}
-                              width={24}
-                              height={24}
-                              className="w-6 h-6 rounded-full"
+                            <Avatar
+                              src={reply?.author?.image}
+                              alt={reply?.author?.name}
+                              size={24}
+                              className="rounded-full"
                             />
                             <div>
                               <div className="inline-block bg-gray-100 rounded-2xl px-4 py-2">
-                                <h4 className="font-semibold text-sm">{reply?.user?.name}</h4>
+                                <h4 className="font-semibold text-sm">{reply?.author?.name}</h4>
                                 <p className="text-sm">{reply?.content}</p>
                               </div>
                               <div className="flex gap-4 mt-1 text-xs text-gray-500">
                                 <button className="font-semibold hover:underline">Thích</button>
                                 <button className="font-semibold hover:underline">Phản hồi</button>
-                                <span>{reply?.createdAt}</span>
+                                {reply?.author?.id === user?.id && (
+                                  <button 
+                                    onClick={() => handleDeleteComment(reply?.id)}
+                                    className="font-semibold hover:underline text-red-500"
+                                  >
+                                    Xóa
+                                  </button>
+                                )}
+                                <span>{getTimeAgo(reply?.created_at)}</span>
                               </div>
                             </div>
                           </div>

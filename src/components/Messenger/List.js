@@ -1,8 +1,9 @@
 import { FaSearch, FaEllipsisH, FaVideo, FaEdit } from "react-icons/fa";
 import { Avatar } from "antd";
+import { Link } from "react-router-dom";
+import { getTimeAgo } from "../../utils/time";
 
-const ChatList = ({ conversations, selectedConversation, onSelectConversation }) => {
-  console.log(conversations);
+const ChatList = ({ conversations, selectedConversation }) => {
   return (
     <>
       {/* Header */}
@@ -36,49 +37,34 @@ const ChatList = ({ conversations, selectedConversation, onSelectConversation })
       {/* Chat list */}
       <div className="flex-1 overflow-y-auto">
         {conversations?.map((conversation) => (
-          <button
-            key={conversation?.id}
-            onClick={() => onSelectConversation(conversation)}
+          <Link
+            key={conversation?.uuid}
+            to={`/messenger/${conversation?.uuid}`}
             className={`flex items-center gap-3 w-full p-2 hover:bg-gray-100 relative
-              ${selectedConversation?.id === conversation?.id ? "bg-blue-50" : ""}`}
+              ${selectedConversation?.uuid === conversation?.uuid ? "bg-blue-50" : ""}`}
           >
             {/* Avatar */}
             <div className="relative">
-                <Avatar
-                src={conversation?.avatar}
-                alt={conversation?.name}
+              <Avatar
+                src={conversation?.last_message?.sender?.image}
                 size={56}
                 className="rounded-full"
               />
-              {conversation?.isOnline && (
-                <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white" />
-              )}
             </div>
 
             {/* Chat info */}
             <div className="flex-1 text-left">
-                <h3 className="font-semibold">{conversation?.name}</h3>
+              <h3 className="font-semibold">{conversation?.last_message?.sender?.name}</h3>
               <div className="flex items-center gap-2">
                 <p className="text-sm text-gray-500 truncate">
-                  {conversation?.lastMessage?.content}
+                  {conversation?.last_message?.content}
                 </p>
                 <span className="text-xs text-gray-500">
-                  · {conversation?.lastMessage?.time}
+                  · {getTimeAgo(conversation?.last_message?.created_at)}
                 </span>
               </div>
             </div>
-
-            {/* Unread indicator */}
-            {conversation.unreadCount > 0 && (
-              <div className="absolute right-4 top-1/2 -translate-y-1/2">
-                <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-                  <span className="text-xs text-white font-medium">
-                    {conversation.unreadCount}
-                  </span>
-                </div>
-              </div>
-            )}
-          </button>
+          </Link>
         ))}
       </div>
     </>
