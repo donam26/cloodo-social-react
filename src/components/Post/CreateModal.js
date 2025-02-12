@@ -1,8 +1,7 @@
 import { Modal, Upload, Button, Input, Avatar, Dropdown, message } from "antd";
-import { FaImage, FaSmile, FaGlobeAsia, FaLock, FaUserFriends } from "react-icons/fa";
+import { FaGlobeAsia, FaLock, FaUserFriends } from "react-icons/fa";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { IoClose } from "react-icons/io5";
 import { PlusOutlined } from '@ant-design/icons';
 import { useCreatePost } from "../../hooks/postHook";
 

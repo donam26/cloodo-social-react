@@ -2,8 +2,46 @@ import { FaSearch, FaEllipsisH, FaVideo, FaEdit } from "react-icons/fa";
 import { Avatar } from "antd";
 import { Link } from "react-router-dom";
 import { getTimeAgo } from "../../utils/time";
+import { useSelector } from "react-redux";
 
 const ChatList = ({ conversations, selectedConversation }) => {
+  const userData = useSelector((state) => state?.user?.user);
+
+  const getConversationInfo = (conversation) => {
+    if (conversation.type === 'private') {
+      const otherMember = conversation?.participants?.find(
+        member => member?.id !== userData?.user?.id
+      );
+      return {
+        name: otherMember?.name || 'Người dùng',
+        image: otherMember?.image
+      };
+    } else {
+      return {
+        name: conversation.name,
+        image: conversation.image,
+        isGroup: true,
+        firstLetter: conversation.name ? conversation.name.charAt(0).toUpperCase() : 'G'
+      };
+    }
+  };
+
+  const renderAvatar = (conversation) => {
+    const info = getConversationInfo(conversation);
+    
+    if (conversation.type === 'private') {
+      return <Avatar src={info.image} size={56} />;
+    } else {
+      return info.image ? (
+        <Avatar src={info.image} size={56} />
+      ) : (
+        <Avatar size={56} className="bg-blue-500 flex items-center justify-center">
+          {info.firstLetter}
+        </Avatar>
+      );
+    }
+  };
+
   return (
     <>
       {/* Header */}
@@ -36,36 +74,36 @@ const ChatList = ({ conversations, selectedConversation }) => {
 
       {/* Chat list */}
       <div className="flex-1 overflow-y-auto">
-        {conversations?.map((conversation) => (
-          <Link
-            key={conversation?.uuid}
-            to={`/messenger/${conversation?.uuid}`}
-            className={`flex items-center gap-3 w-full p-2 hover:bg-gray-100 relative
-              ${selectedConversation?.uuid === conversation?.uuid ? "bg-blue-50" : ""}`}
-          >
-            {/* Avatar */}
-            <div className="relative">
-              <Avatar
-                src={conversation?.last_message?.sender?.image}
-                size={56}
-                className="rounded-full"
-              />
-            </div>
+        <div className="space-y-1">
+          {conversations?.map((conversation) => {
+            const info = getConversationInfo(conversation);
+            const isSelected = selectedConversation?.id === conversation.id;
+            const isCurrentUserLastMessage = conversation?.last_message?.sender?.id === userData?.user?.id;
 
-            {/* Chat info */}
-            <div className="flex-1 text-left">
-              <h3 className="font-semibold">{conversation?.last_message?.sender?.name}</h3>
-              <div className="flex items-center gap-2">
-                <p className="text-sm text-gray-500 truncate">
-                  {conversation?.last_message?.content}
-                </p>
-                <span className="text-xs text-gray-500">
-                  · {getTimeAgo(conversation?.last_message?.created_at)}
-                </span>
-              </div>
-            </div>
-          </Link>
-        ))}
+            return (
+              <Link 
+                key={conversation.id} 
+                to={`/messenger/${conversation.id}`}
+                className={`flex items-center gap-3 p-2 hover:bg-gray-100 ${isSelected ? 'bg-blue-50' : ''}`}
+              >
+                {renderAvatar(conversation)}
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold text-[15px] text-gray-900">
+                      {info.name}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {getTimeAgo(conversation?.last_message?.created_at)}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-500 truncate">
+                    {isCurrentUserLastMessage ? 'Bạn: ' : ''}{conversation?.last_message?.content}
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
       </div>
     </>
   );

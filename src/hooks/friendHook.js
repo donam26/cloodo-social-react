@@ -75,6 +75,8 @@ export const useFriendAction = () => {
           // Cập nhật lại danh sách bạn bè
           queryClient.invalidateQueries(['friends']);
           break;
+        default:
+          break;
       }
     },
     onError: () => {

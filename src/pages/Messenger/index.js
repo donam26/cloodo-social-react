@@ -6,17 +6,22 @@ import Sidebar from "../../components/Messenger/Sidebar";
 import { useGetConversation, useGetConversationById } from "../../hooks/messengerHook";
 
 const MessengerPage = () => {
-  const { data: conversations } = useGetConversation();
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { data: conversations } = useGetConversation();
   const { data: conversationDetail } = useGetConversationById(id);
   const [selectedConversation, setSelectedConversation] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
+    // Nếu có id trên URL và có dữ liệu chi tiết
     if (id && conversationDetail?.data) {
       setSelectedConversation(conversationDetail.data);
-    } else if (!id && conversations?.data?.length > 0) {
-      navigate(`/messenger/${conversations.data[0].uuid}`);
+    } 
+    // Nếu không có id nhưng có danh sách chat, tự động chọn chat đầu tiên
+    else if (!id && conversations?.data?.length > 0) {
+      const firstConversation = conversations.data[0];
+      navigate(`/messenger/${firstConversation.id}`);
+      setSelectedConversation(firstConversation);
     }
   }, [id, conversationDetail, conversations, navigate]);
 
@@ -33,7 +38,7 @@ const MessengerPage = () => {
       {/* Cửa sổ chat */}
       <div className="flex-1 hidden md:block">
         {selectedConversation ? (
-          <ChatWindow id={selectedConversation.uuid} />
+          <ChatWindow id={selectedConversation.id} />
         ) : (
           <div className="flex items-center justify-center h-full">
             <p className="text-gray-500">Chọn một cuộc trò chuyện để bắt đầu</p>

@@ -1,15 +1,15 @@
-import { BiEdit, BiMessageRounded } from "react-icons/bi";
+import { BiEdit } from "react-icons/bi";
 import { HiLocationMarker } from "react-icons/hi";
 import { BsBriefcase, BsGlobe2 } from "react-icons/bs";
 import { IoSchoolOutline } from "react-icons/io5";
 import { MdOutlineFavorite } from "react-icons/md";
 import { Avatar, message, Modal, Upload, Button } from "antd";
-import { useSelector } from "react-redux";
 import { useGetMyProfile, useUpdateProfile } from "../../hooks/profileHook";
 import { useState } from "react";
 import Post from "../../components/Post";
 import { PlusOutlined } from '@ant-design/icons';
 import CreatePostModal from "../../components/Post/CreateModal";
+import { Link } from "react-router-dom";
 
 const ProfilePage = () => {
   const { data: profileData, isLoading } = useGetMyProfile();
@@ -101,7 +101,7 @@ const ProfilePage = () => {
           onClick={() => setIsEditingCover(true)}
         >
           <BiEdit className="text-xl" />
-          <span>Chỉnh sửa ảnh bìa</span>
+          <span>Thay ảnh bìa</span>
         </button>
       </div>
 
@@ -262,11 +262,13 @@ const ProfilePage = () => {
                 <div className="grid grid-cols-3 gap-2">
                   {profile?.photos?.slice(0, 9).map((photo, index) => (
                     <div key={index} className="aspect-square group relative cursor-pointer">
-                      <img
-                        src={photo}
-                        alt={`Photo ${index + 1}`}
-                        className="w-full h-full object-cover rounded-lg"
+                      <Link to={`/profile/${profile?.id}/photos/${photo?.id}`}>
+                        <image
+                          src={photo}
+                          alt={`Photo ${index + 1}`}
+                          className="w-full h-full object-cover rounded-lg"
                       />
+                      </Link>
                       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-200 rounded-lg" />
                     </div>
                   ))}

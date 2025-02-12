@@ -1,12 +1,8 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { BiEdit, BiMessageRounded, BiDotsHorizontalRounded } from "react-icons/bi";
+import { Link, useParams } from 'react-router-dom';
+import { BiMessageRounded, BiDotsHorizontalRounded } from "react-icons/bi";
 import { FaUserPlus, FaUserMinus, FaUserTimes } from "react-icons/fa";
-import { HiLocationMarker } from "react-icons/hi";
-import { BsBriefcase, BsGlobe2 } from "react-icons/bs";
-import { IoSchoolOutline } from "react-icons/io5";
-import { MdOutlineFavorite } from "react-icons/md";
-import { Avatar, Dropdown, Button, Skeleton, message } from "antd";
+import { Avatar, Dropdown, Button, Skeleton, message, Modal } from "antd";
 import { useGetProfile } from '../../../hooks/profileHook';
 import { useFriendAction } from '../../../hooks/friendHook';
 import Post from '../../../components/Post';
@@ -14,12 +10,14 @@ import Post from '../../../components/Post';
 const ProfileDetail = () => {
   const { id } = useParams();
   const [loadingAction, setLoadingAction] = useState(false);
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
   const { data: profileData, isLoading } = useGetProfile(id);
   const { sendFriendAction } = useFriendAction();
 
   const profile = profileData?.profile;
   const friendStatus = profileData?.friend_status;
   const isSelf = profileData?.is_self;
+  console.log(friendStatus);
 
   const handleFriendAction = async (action) => {
     setLoadingAction(true);
@@ -38,6 +36,8 @@ const ProfileDetail = () => {
         case 'block':
           message.success('Đã chặn người dùng');
           break;
+        default:
+          break;
       }
     } catch (error) {
       message.error('Có lỗi xảy ra, vui lòng thử lại sau');
@@ -55,13 +55,13 @@ const ProfileDetail = () => {
         {
           key: 'unfriend',
           label: 'Hủy kết bạn',
-          icon: <FaUserMinus />,
+          icon: <FaUserMinus className="text-gray-600" />,
           onClick: () => handleFriendAction('cancel')
         },
         {
           key: 'block',
           label: 'Chặn',
-          icon: <FaUserTimes />,
+          icon: <FaUserTimes className="text-red-500" />,
           danger: true,
           onClick: () => handleFriendAction('block')
         }
@@ -76,6 +76,7 @@ const ProfileDetail = () => {
             icon={<FaUserPlus />}
             loading={loadingAction}
             onClick={() => handleFriendAction('request')}
+            className="bg-blue-500 hover:bg-blue-600"
           >
             Thêm bạn bè
           </Button>
@@ -87,42 +88,54 @@ const ProfileDetail = () => {
             icon={<FaUserMinus />}
             loading={loadingAction}
             onClick={() => handleFriendAction('cancel')}
+            className="bg-gray-200 hover:bg-gray-300 text-black"
           >
-            Hủy lời mời
+            <div className="flex items-center gap-2">
+              <span>Đã gửi lời mời</span>
+            </div>
           </Button>
         );
 
-      case 'pending_received':
+      case 'pending':
         return (
           <div className="flex gap-2">
             <Button
               type="primary"
               loading={loadingAction}
               onClick={() => handleFriendAction('accept')}
+              className="bg-blue-500 hover:bg-blue-600"
             >
-              Chấp nhận
+              Xác nhận
             </Button>
             <Button
               loading={loadingAction}
               onClick={() => handleFriendAction('cancel')}
+              className="bg-gray-200 hover:bg-gray-300 text-black"
             >
-              Từ chối
+              Xóa
             </Button>
           </div>
         );
 
-      case 'friend':
+      case 'accepted':
         return (
           <div className="flex gap-2">
-            <Button
-              icon={<BiMessageRounded />}
-              onClick={() => {/* Handle message */}}
-            >
-              Nhắn tin
-            </Button>
             <Dropdown menu={dropdownItems} placement="bottomRight">
-              <Button icon={<BiDotsHorizontalRounded />} />
+              <Button 
+                icon={<FaUserPlus />}
+                className="bg-gray-200 hover:bg-gray-300 text-black flex items-center gap-2"
+              >
+                <span>Bạn bè</span>
+              </Button>
             </Dropdown>
+            <Button
+              type="primary"
+              icon={<BiMessageRounded className="text-xl" />}
+              onClick={() => {/* Handle message */}}
+              className="bg-blue-500 hover:bg-blue-600 flex items-center gap-2"
+            >
+              <span>Nhắn tin</span>
+            </Button>
           </div>
         );
 
@@ -155,23 +168,42 @@ const ProfileDetail = () => {
         <div className="relative bg-white rounded-lg shadow -mt-[100px] p-6">
           <div className="flex items-start gap-6">
             {/* Avatar */}
-            <div className="relative">
+            <div className="relative cursor-pointer group" onClick={() => setShowAvatarModal(true)}>
               <Avatar
-                src={profile.image}
-                alt={profile.name}
-                size={168}
-                className="rounded-full border-4 border-white"
+                src={profile?.image}
+                alt={profile?.name}
+                size={122}
+                className="rounded-full border-4 border-white transition-transform hover:opacity-90"
               />
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 group-hover:bg-opacity-20 rounded-full transition-all">
+                <span className="text-white opacity-0 group-hover:opacity-100">Xem ảnh đại diện</span>
+              </div>
             </div>
+
+            {/* Avatar Modal */}
+            <Modal
+              open={showAvatarModal}
+              onCancel={() => setShowAvatarModal(false)}
+              footer={null}
+              width={600}
+              centered
+            >
+              <img
+                src={profile?.image}
+                alt={profile?.name}
+                className="w-full rounded-lg"
+                style={{ maxHeight: '80vh', objectFit: 'contain' }}
+              />
+            </Modal>
 
             {/* Info */}
             <div className="flex-1">
               <div className="flex justify-between items-start">
                 <div>
-                  <h1 className="text-3xl font-bold mb-1">{profile.name}</h1>
-                  {profile.bio && <p className="text-gray-600 mb-2">{profile.bio}</p>}
+                  <h1 className="text-3xl font-bold mb-1">{profile?.name}</h1>
+                  {profile?.bio && <p className="text-gray-600 mb-2">{profile?.bio}</p>}
                   <div className="flex items-center gap-6 text-gray-600">
-                    <span>{profile.friends?.total || 0} bạn bè</span>
+                    <span>{profile?.friends?.total || 0} bạn bè</span>
                   </div>
                 </div>
                 <div className="flex gap-2">
@@ -223,14 +255,16 @@ const ProfileDetail = () => {
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   {profile.friends.items.slice(0, 9).map(friend => (
-                    <div key={friend.id} className="text-center">
-                      <Avatar 
+                    <Link to={`/profile/${friend.id}`}>
+                      <div key={friend.id} className="text-center">
+                        <Avatar 
                         src={friend.image} 
                         size={80}
                         className="mb-1"
                       />
-                      <p className="text-sm font-medium truncate">{friend.name}</p>
-                    </div>
+                        <p className="text-sm font-medium truncate">{friend.name}</p>
+                      </div>
+                    </Link>
                   ))}
                 </div>
               </div>

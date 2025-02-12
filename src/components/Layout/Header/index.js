@@ -38,18 +38,16 @@ const items = [
   },
 ];
 
-
 const Header = () => {
   const userData = useSelector((state) => state?.user?.user);
-
     return (
-      <header className="fixed top-0 left-0 right-0 h-14 bg-white shadow-sm z-50">
+      <header className="fixed top-0 left-0 right-0 h-14 bg-white shadow-sm z-50 shadow-gray-300">
         <div className="flex items-center justify-between h-full px-4">
           {/* Left section */}
           <div className="flex items-center gap-2">
             <Link to="/" className="flex items-center">
               <img
-                src="https://cloodo.com/logo.png"
+                src="https://media-cloodo.s3.amazonaws.com/Icon_2d75277193.png"
                 alt="Logo"
                 width={40}
                 height={40}

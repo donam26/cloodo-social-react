@@ -11,15 +11,6 @@ export const useGetConversation = () => {
   });
 };
 
-export const useGetMessages = (id) => {
-  return useQuery({
-    queryKey: ['messages', id],
-    queryFn: () => getMessages(id),
-    staleTime: 1000 * 60, // 1 phút
-    cacheTime: 1000 * 60 * 5, // 5 phút
-  });
-};
-
 export const useGetConversationById = (id) => {
   return useQuery({
     queryKey: ['conversation', id],

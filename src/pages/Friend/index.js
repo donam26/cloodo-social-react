@@ -131,13 +131,17 @@ const FriendsPage = () => {
               {friends?.data?.map((friend) => (
                 <div key={friend.id} className="bg-white rounded-lg shadow p-4">
                   <div className="flex items-center gap-4">
-                    <img
-                      src={friend.image}
-                      alt={friend.name}
-                      className="w-20 h-20 rounded-lg object-cover"
-                    />
+                    <Link to={`/profile/${friend.id}`}>
+                      <img
+                        src={friend.image}
+                        alt={friend.name}
+                        className="w-20 h-20 rounded-lg object-cover"
+                      />
+                    </Link>
                     <div className="flex-1">
-                      <h3 className="font-medium text-lg">{friend.name}</h3>
+                      <Link to={`/profile/${friend.id}`}>
+                        <h3 className="font-medium text-lg">{friend.name}</h3>
+                      </Link>
                       <p className="text-sm text-gray-500">{friend.mutual_friends} bạn chung</p>
                       <div className="flex gap-2 mt-3">
                         <button
@@ -172,7 +176,7 @@ const FriendsPage = () => {
           Lời mời kết bạn
           {requests?.data?.length > 0 && (
             <span className="bg-red-500 text-white rounded-full px-2 py-0.5 text-xs">
-              {requests.data.length}
+              {requests?.data?.length}
             </span>
           )}
         </span>
@@ -190,28 +194,32 @@ const FriendsPage = () => {
               {requests?.data?.map((request) => (
                 <div key={request.id} className="bg-white rounded-lg shadow p-4">
                   <div className="flex items-center gap-4">
-                    <img
-                      src={request.sender.image}
-                      alt={request.sender.name}
-                      className="w-20 h-20 rounded-lg object-cover"
-                    />
+                    <Link to={`/profile/${request?.id}`}>
+                      <img
+                        src={request?.image}
+                        alt={request?.name}
+                        className="w-20 h-20 rounded-lg object-cover"
+                      />
+                    </Link>
                     <div className="flex-1">
-                      <h3 className="font-medium text-lg">{request.sender.name}</h3>
-                      <p className="text-sm text-gray-500">{request.mutual_friends} bạn chung</p>
+                      <Link to={`/profile/${request?.id}`}>
+                        <h3 className="font-medium text-lg">{request?.name}</h3>
+                      </Link>
+                      <p className="text-sm text-gray-500">{request?.mutual_friends} bạn chung</p>
                       <div className="flex gap-2 mt-3">
                         <button
-                          onClick={() => handleAcceptRequest(request.sender.id)}
-                          disabled={loadingStates[request.sender.id]}
+                          onClick={() => handleAcceptRequest(request?.id)}
+                          disabled={loadingStates[request?.id]}
                           className="px-4 py-2 bg-blue-500 text-white rounded-md font-medium hover:bg-blue-600 disabled:opacity-50"
                         >
-                          {loadingStates[request.sender.id] ? 'Đang xử lý...' : 'Chấp nhận'}
+                          {loadingStates[request?.id] ? 'Đang xử lý...' : 'Chấp nhận'}
                         </button>
                         <button
-                          onClick={() => handleRejectRequest(request.sender.id)}
-                          disabled={loadingStates[request.sender.id]}
+                          onClick={() => handleRejectRequest(request?.id)}
+                          disabled={loadingStates[request?.id]}
                           className="px-4 py-2 bg-gray-200 text-black rounded-md font-medium hover:bg-gray-300 disabled:opacity-50"
-                        >
-                          {loadingStates[request.sender.id] ? 'Đang xử lý...' : 'Từ chối'}
+                            >
+                              {loadingStates[request?.id] ? 'Đang xử lý...' : 'Từ chối'}
                         </button>
                       </div>
                     </div>
@@ -242,32 +250,36 @@ const FriendsPage = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {suggestions?.data?.map((suggestion) => (
-                <Link to={`/profile/${suggestion.id}`} key={suggestion.id} className="bg-white rounded-lg shadow p-4">
+                <div key={suggestion.id} className="bg-white rounded-lg shadow p-4">
                   <div className="flex flex-col items-center text-center">
-                    <img
-                      src={suggestion.image}
-                      alt={suggestion.name}
-                      className="w-32 h-32 rounded-lg object-cover mb-3"
-                    />
+                    <Link to={`/profile/${suggestion?.id}`}>
+                      <img
+                        src={suggestion?.image}
+                        alt={suggestion?.name}
+                        className="w-32 h-32 rounded-lg object-cover mb-3"
+                      />
+                    </Link>
                     <div className="flex-1">
-                      <h3 className="font-medium text-lg">{suggestion.name}</h3>
-                      {suggestion.mutual_friends > 0 && (
+                      <Link to={`/profile/${suggestion?.id}`}>
+                        <h3 className="font-medium text-lg">{suggestion?.name}</h3>
+                      </Link>
+                      {suggestion?.mutual_friends > 0 && (
                         <p className="text-sm text-gray-500 mb-3">
-                          {suggestion.mutual_friends} bạn chung
+                          {suggestion?.mutual_friends} bạn chung
                         </p>
                       )}
                       <div className="flex flex-col gap-2">
                         <button
-                          onClick={() => handleAddFriend(suggestion.id)}
-                          disabled={loadingStates[suggestion.id]}
+                          onClick={() => handleAddFriend(suggestion?.id)}
+                          disabled={loadingStates[suggestion?.id]}
                           className="w-full px-4 py-2 bg-blue-500 text-white rounded-md font-medium hover:bg-blue-600 disabled:opacity-50 flex items-center justify-center gap-2"
                         >
                           <FaUserPlus className="w-4 h-4" />
-                          {loadingStates[suggestion.id] ? 'Đang xử lý...' : 'Thêm bạn bè'}
+                          {loadingStates[suggestion?.id] ? 'Đang xử lý...' : 'Thêm bạn bè'}
                         </button>
                         <button
-                          onClick={() => handleRemoveSuggestion(suggestion.id)}
-                          disabled={loadingStates[suggestion.id]}
+                          onClick={() => handleRemoveSuggestion(suggestion?.id)}
+                          disabled={loadingStates[suggestion?.id]}
                           className="w-full px-4 py-2 bg-gray-200 text-black rounded-md font-medium hover:bg-gray-300 disabled:opacity-50"
                         >
                           {loadingStates[suggestion.id] ? 'Đang xử lý...' : 'Xóa gợi ý'}
@@ -275,7 +287,7 @@ const FriendsPage = () => {
                       </div>
                     </div>
                   </div>
-                </Link>
+                </div>
               ))}
             </div>
           )}

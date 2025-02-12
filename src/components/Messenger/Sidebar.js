@@ -2,26 +2,65 @@ import { FaSearch, FaBell, FaThumbsUp, FaImage, FaVideo, FaPhone } from "react-i
 import { IoMdSettings } from "react-icons/io";
 import { Avatar } from "antd";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Sidebar = ({ conversation }) => {
-  if (!conversation) return null;
+  const userData = useSelector((state) => state?.user?.user);
 
-  // Lấy thông tin người dùng đầu tiên trong danh sách participants
-  const firstParticipant = conversation.participants?.[0];
+  const getConversationInfo = () => {
+    if (!conversation) return null;
+
+    if (conversation.type === 'private') {
+      const otherMember = conversation?.participants?.find(
+        member => member?.id !== userData?.user?.id
+      );
+      return {
+        name: otherMember?.name || 'Người dùng',
+        image: otherMember?.image,
+        bio: otherMember?.bio
+      };
+    } else {
+      return {
+        name: conversation.name,
+        image: conversation.image,
+        isGroup: true,
+        firstLetter: conversation.name ? conversation.name.charAt(0).toUpperCase() : 'G',
+        members: conversation.participants
+      };
+    }
+  };
+
+  const renderAvatar = () => {
+    const info = getConversationInfo();
+    if (!info) return null;
+    
+    if (conversation.type === 'private') {
+      return <Avatar src={info.image} size={80} />;
+    } else {
+      return info.image ? (
+        <Avatar src={info.image} size={80} />
+      ) : (
+        <Avatar size={80} className="bg-blue-500 flex items-center justify-center">
+          {info.firstLetter}
+        </Avatar>
+      );
+    }
+  };
+
+  const info = getConversationInfo();
+  if (!info) return null;
 
   return (
     <div className="h-full p-4">
       {/* Profile */}
       <div className="flex flex-col items-center pb-4 border-b">
         <div className="relative mb-2">
-          <Avatar
-            src={firstParticipant?.image}
-            size={80}
-            className="rounded-full"
-          />
+          {renderAvatar()}
         </div>
-        <h2 className="text-xl font-semibold">{firstParticipant?.name}</h2>
-        <p className="text-sm text-gray-500">{firstParticipant?.email}</p>
+        <h2 className="text-xl font-semibold">{info.name}</h2>
+        {info.bio && (
+          <p className="text-sm text-gray-500">{info.bio}</p>
+        )}
       </div>
 
       {/* Actions */}
@@ -55,20 +94,30 @@ const Sidebar = ({ conversation }) => {
       </div>
 
       {/* Members */}
-      <div className="py-4 border-b">
-        <h3 className="text-lg font-semibold mb-4">Thành viên nhóm</h3>
-        <div className="space-y-3">
-          {conversation.participants?.map((participant) => (
-            <Link key={participant.id} to={`/profile/${participant.id}`} className="flex items-center gap-2">
-              <Avatar src={participant.image} size={40} className="rounded-full" />
-              <div>
-                <p className="font-medium">{participant.name}</p>
-                <p className="text-sm text-gray-500">{participant.email}</p>
-              </div>
-            </Link>
-          ))}
+      {info.isGroup ? (
+        <div className="py-4 border-b">
+          <h3 className="text-lg font-semibold mb-4">Thành viên nhóm</h3>
+          <div className="space-y-3">
+            {info.members?.map((member) => (
+              <Link key={member.id} to={`/profile/${member.id}`} className="flex items-center gap-2">
+                <Avatar src={member.image} size={40} className="rounded-full" />
+                <div>
+                  <p className="font-medium">{member.name}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="space-y-4">
+          <div>
+            <h3 className="font-semibold mb-2">Giới thiệu</h3>
+            <p className="text-gray-600">
+              {info.bio || 'Chưa có thông tin giới thiệu'}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* File sharing */}
       <div className="py-4 border-b">

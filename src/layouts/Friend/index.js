@@ -1,6 +1,5 @@
 import Header from "../../components/Layout/Header";
 import Sidebar from "../../components/Layout/Sidebar";
-import SidebarFriend from "../../components/Layout/SidebarFriend";
 
 const FriendLayout = ({ children }) => {
     return (

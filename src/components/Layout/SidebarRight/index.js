@@ -4,6 +4,7 @@ import { useGetFriendSuggestions, useFriendAction } from "../../../hooks/friendH
 import { contacts } from "../../../data/contact";
 import { Skeleton, Spin } from "antd";
 import { useState } from "react";
+import { Link } from "react-router-dom";
   
 const SidebarRight = () => {
   const { data: suggestions, isLoading: isLoadingSuggestions } = useGetFriendSuggestions();
@@ -66,15 +67,19 @@ const SidebarRight = () => {
               {suggestions?.data?.map((suggestion) => (
                 <div key={suggestion.id} className="relative">
                   <div className="flex items-start gap-3">
-                    <img
-                      src={suggestion?.image}
-                      alt={suggestion.name}
-                      width={60}
-                      height={60}
-                      className="rounded-lg"
-                    />
+                    <Link to={`/profile/${suggestion.id}`}>
+                      <img
+                        src={suggestion?.image}
+                        alt={suggestion.name}
+                        width={60}
+                        height={60}
+                        className="rounded-lg"
+                      />
+                    </Link>
                     <div className="flex-1">
-                      <h3 className="font-medium">{suggestion.name}</h3>
+                      <Link to={`/profile/${suggestion.id}`}>
+                        <h3 className="font-medium">{suggestion.name}</h3>
+                      </Link>
                       <p className="text-xs text-gray-500">{suggestion.mutual_friends} bạn chung</p>
                       <div className="flex gap-2 mt-2">
                         <button 

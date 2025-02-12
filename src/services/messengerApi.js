@@ -20,8 +20,3 @@ export const sendMessage = async (data) => {
   return response.data;
 };
 
-export const getMessages = async (id) => {
-  const response = await axiosInstance.get(`/messages/${id}`);
-  return response.data;
-};
-

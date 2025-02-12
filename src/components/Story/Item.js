@@ -1,51 +1,60 @@
-import { FaPlus } from "react-icons/fa";
-
 const StoryItem = ({ story, onClick }) => {
+  const renderBackground = () => {
+    if (story.background?.type === 'image' && story.background?.image) {
+      return (
+        <img
+          src={story.background.image}
+          alt="Story background"
+          className="w-full h-full object-cover group-hover:transform group-hover:scale-105 transition-transform duration-300"
+        />
+      );
+    } else if (story.background?.type === 'color' && story.background?.value) {
+      return (
+        <div 
+          className="w-full h-full group-hover:transform group-hover:scale-105 transition-transform duration-300"
+          style={{ backgroundColor: story.background.value }}
+        />
+      );
+    }
+    return null;
+  };
+
   return (
     <div
       onClick={onClick}
       className="relative flex-shrink-0 w-[120px] h-[200px] rounded-lg overflow-hidden cursor-pointer group"
     >
-      {story.isCreateStory ? (
-        <>
-          <div className="absolute inset-0 bg-white">
-            <img
-              src={story.user?.image}
-              alt={story.user.name}
-              className="object-cover"
-            />
-          </div>
-          <div className="absolute bottom-0 w-full h-1/3 bg-white">
-            <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center border-4 border-white">
-              <FaPlus className="text-white" />
-            </div>
-            <p className="text-center text-sm font-medium mt-6">
-              {story.user.name}
-            </p>
-          </div>
-        </>
-      ) : (
-        <>
-          {story.image && (
-            <img
-              src={story.image}
-              alt={story.user.name}
-              className="object-cover group-hover:transform group-hover:scale-105 transition-transform duration-300"
-            />
-          )}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/60" />
-          <div className="absolute top-4 left-4 w-10 h-10 rounded-full border-4 border-blue-500 overflow-hidden">
-            <img
-              src={story.user?.image}
-              alt={story.user.name}
-              className="object-cover"
-            />
-          </div>
-          <p className="absolute bottom-4 left-4 text-white text-sm font-medium">
-            {story.user.name}
-          </p>
-        </>
+      {/* Background */}
+      {renderBackground()}
+
+      {/* Overlay gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/60" />
+
+      {/* Story text if exists */}
+      {story.text && (
+        <div 
+          className="absolute"
+          style={{
+            left: `${story.text.position.x}px`,
+            top: `${story.text.position.y}px`,
+            ...story.text.style
+          }}
+        >
+          {story.text.content}
+        </div>
       )}
+
+      {/* Author info */}
+      <div className="absolute top-4 left-4 w-10 h-10 rounded-full border-4 border-blue-500 overflow-hidden">
+        <img
+          src={story.author?.image}
+          alt={story.author?.name}
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <p className="absolute bottom-4 left-4 text-white text-sm font-medium">
+        {story.author?.name}
+      </p>
     </div>
   );
 };
