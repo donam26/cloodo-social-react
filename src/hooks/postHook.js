@@ -1,10 +1,19 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getPost, createPost, reactPost, createComment, deleteComment } from '../services/postApi';
+import { getPost, createPost, reactPost, createComment, deleteComment, getPostById } from '../services/postApi';
 
 export const useGetPost = () => {
   return useQuery({
     queryKey: ['posts'],
     queryFn: getPost,
+    staleTime: 1000 * 60, // 1 phút
+    cacheTime: 1000 * 60 * 5, // 5 phút
+  });
+};
+
+export const useGetPostById = (id) => {
+  return useQuery({
+    queryKey: ['post', id],
+    queryFn: () => getPostById(id),
     staleTime: 1000 * 60, // 1 phút
     cacheTime: 1000 * 60 * 5, // 5 phút
   });

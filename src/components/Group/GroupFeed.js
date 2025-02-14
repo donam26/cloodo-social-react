@@ -1,15 +1,17 @@
 import { FaEllipsisH, FaThumbsUp, FaComment, FaShare } from "react-icons/fa";
 import { groupPosts } from "../../data/groups";
 import { Avatar } from "antd";
-
+import { useSelector } from "react-redux";
 const GroupFeed = () => {
+  const userData = useSelector((state) => state?.user?.user);
+
   return (
     <div className="flex flex-col gap-4">
       {/* Create post */}
       <div className="bg-white rounded-lg shadow-sm p-4">
         <div className="flex gap-2">
           <Avatar
-            src="/images/avatar.jpg"
+            src={userData?.user?.image}
             alt="User avatar"
             size={40}
             className="rounded-full"

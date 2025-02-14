@@ -134,7 +134,9 @@ const Post = ({ post, isLoading }) => {
                 <h3 className="font-medium">{post?.author?.name}</h3>
               </Link>
               <div className="flex items-center gap-1">
-                <p className="text-gray-500 text-xs">{getTimeAgo(post?.created_at)}</p>
+                <Link to={`/posts/${post?.id}`}>
+                  <p className="text-gray-500 text-xs">{getTimeAgo(post?.created_at)}</p>
+                </Link>
                 <span className="text-gray-500 mx-1">•</span>
                 <div className="flex items-center gap-1 text-gray-500">
                   {post?.status === 'private' ? (

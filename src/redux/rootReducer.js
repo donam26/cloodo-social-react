@@ -1,11 +1,10 @@
 import { combineReducers } from 'redux';
-import messengerSlice from './features/messenger/messengerSlice';
+import messengerReducer from './features/messenger/messengerSlice';
 import authSlice from './features/auth/authSlice';
 
 const rootReducer = combineReducers({
   user: authSlice.reducer,
-  messenger: messengerSlice.reducer,
-
+  messenger: messengerReducer
 });
 
 export default rootReducer;

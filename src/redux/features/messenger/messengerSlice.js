@@ -1,7 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  messages: []
+  messages: [],
+  unreadMessages: {},  // { conversationId: count }
+  isLoading: false,
+  error: null
 };
 
 export const messengerSlice = createSlice({
@@ -10,6 +13,14 @@ export const messengerSlice = createSlice({
   reducers: {
     setMessages: (state, action) => {
       state.messages = action.payload;
+    },
+    addUnreadMessage: (state, action) => {
+      const { conversationId } = action.payload;
+      state.unreadMessages[conversationId] = (state.unreadMessages[conversationId] || 0) + 1;
+    },
+    clearUnreadMessages: (state, action) => {
+      const { conversationId } = action.payload;
+      state.unreadMessages[conversationId] = 0;
     },
     setLoading: (state, action) => {
       state.isLoading = action.payload;
@@ -23,6 +34,14 @@ export const messengerSlice = createSlice({
   },
 });
 
-export const { setMessages } = messengerSlice.actions;
+export const { 
+  setMessages, 
+  addUnreadMessage, 
+  clearUnreadMessages,
+  setLoading, 
+  setError, 
+  resetState 
+} = messengerSlice.actions;
+
 export const selectMessages = state => state.messenger.messages;
-export default messengerSlice;
+export default messengerSlice.reducer;

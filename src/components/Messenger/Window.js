@@ -1,36 +1,38 @@
 import { Avatar, Input, Button, Tooltip, Popover } from "antd";
-import { useGetConversationById } from "../../hooks/messengerHook";
+import { useGetConversationById, useSendMessage } from "../../hooks/messengerHook";
 import { useSelector } from "react-redux";
 import { getTimeAgo } from "../../utils/time";
 import { useEffect, useRef, useState, useMemo } from "react";
-import { FaRegSmile, FaImage, FaThumbsUp, FaPaperPlane, FaMicrophone, FaGift, FaPhone, FaVideo, FaInfoCircle } from "react-icons/fa";
-import { GrGallery } from "react-icons/gr";
-import { BsStickies } from "react-icons/bs";
+import { FaRegSmile, FaImage, FaThumbsUp, FaPaperPlane, FaPhone, FaVideo, FaInfoCircle } from "react-icons/fa";
 import EmojiPickerPopover from "./EmojiPickerPopover";
+import VideoCall from "./VideoCall";
+import "./VideoCall.css";
+import InputMessage from "./InputMessage";
+import { useCreateToken } from "../../hooks/meetHook";
 
-const ChatWindow = ({ id }) => {
+const ChatWindow = ({ selectedConversation }) => {
     const userData = useSelector((state) => state?.user?.user);
-    const { data: conversationData } = useGetConversationById(id);
-    const conversation = conversationData?.data;
+    const { mutate: sendMessage } = useSendMessage();
     const messagesEndRef = useRef(null);
     const [newMessage, setNewMessage] = useState("");
     const [showEmoji, setShowEmoji] = useState(false);
+    const [isCallVisible, setIsCallVisible] = useState(false);
+    const [isVideoCall, setIsVideoCall] = useState(false);
+    const [token, setToken] = useState(null);
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
     useEffect(() => {
-        if (conversation) {
+        if (selectedConversation.conversation) {
             scrollToBottom();
         }
-    }, [conversation]);
+    }, [selectedConversation.conversation]);
 
     const getConversationInfo = () => {
-        if (!conversation) return {};
-        
-        if (conversation?.type === 'private') {
-            const otherMember = conversation?.participants?.find(
+        if (selectedConversation?.conversation?.type === 'private') {
+            const otherMember = selectedConversation?.conversation?.participants?.find(
                 member => member?.id !== userData?.user?.id
             );
             return {
@@ -39,20 +41,20 @@ const ChatWindow = ({ id }) => {
             };
         } else {
             return {
-                name: conversation.name,
-                image: conversation.image,
+                name: selectedConversation?.conversation?.name,
+                image: selectedConversation?.conversation?.image,
                 isGroup: true,
-                firstLetter: conversation.name ? conversation.name.charAt(0).toUpperCase() : 'G'
+                firstLetter: selectedConversation?.conversation?.name ? selectedConversation?.conversation?.name.charAt(0).toUpperCase() : 'G'
             };
         }
     };
 
     const renderAvatar = () => {
         const info = getConversationInfo();
-        
+
         if (!info.image && !info.firstLetter) return null;
 
-        if (conversation?.type === 'private') {
+        if (selectedConversation?.conversation?.type === 'private') {
             return <Avatar src={info.image} size={40} />;
         } else {
             return info.image ? (
@@ -67,7 +69,7 @@ const ChatWindow = ({ id }) => {
 
     const renderMessage = (message) => {
         const isCurrentUser = message?.sender?.id === userData?.user?.id;
-        
+
         return (
             <div key={message.uuid} className={`flex gap-2 mb-2 ${isCurrentUser ? 'justify-end' : 'justify-start'}`}>
                 {!isCurrentUser && (
@@ -100,29 +102,52 @@ const ChatWindow = ({ id }) => {
         { icon: <FaImage className="w-5 h-5" />, tooltip: 'Thêm ảnh' },
     ], []);
 
-    const handleSendMessage = () => {
-        if (newMessage.trim()) {
-            // Xử lý gửi tin nhắn ở đây
-            setNewMessage("");
-        }
+    const handleSendMessage = (conversationId, content) => {
+        sendMessage({ conversationId, content }, {
+            onSuccess: () => {
+                scrollToBottom();
+            }
+        });
     };
 
     const info = getConversationInfo();
+    const { mutate: createToken } = useCreateToken();
+    const handleStartCall = (video = false) => {
+        createToken({
+            channelName: selectedConversation?.conversation?.id,
+            uid: userData?.user?.id,
+        }, {
+            onSuccess: (data) => {
+                setToken(data.token);
+                setIsVideoCall(video);
+                setIsCallVisible(true);
+            }
+        });
+    };
+
+    const handleEndCall = () => {
+        setIsCallVisible(false);
+    };
 
     const headerButtons = useMemo(() => [
         {
             icon: <FaPhone className="w-5 h-5" />,
             tooltip: 'Gọi thoại',
-            onClick: () => {/* Xử lý gọi thoại */}
+            onClick: () => handleStartCall(false)
         },
         {
             icon: <FaVideo className="w-5 h-5" />,
             tooltip: 'Gọi video',
-            onClick: () => {/* Xử lý gọi video */}
+            onClick: () => handleStartCall(true)
         },
+        {
+            icon: <FaInfoCircle className="w-5 h-5" />,
+            tooltip: 'Thông tin hội thoại',
+            onClick: () => {/* Xử lý xem thông tin */ }
+        }
     ], []);
 
-    if (!conversation) {
+    if (!selectedConversation?.conversation) {
         return (
             <div className="flex items-center justify-center h-full">
                 <p className="text-gray-500">Đang tải...</p>
@@ -139,7 +164,7 @@ const ChatWindow = ({ id }) => {
                     <div>
                         <h2 className="font-semibold text-lg">{info?.name}</h2>
                         <p className="text-sm text-gray-500">
-                            {conversation?.participants?.length} thành viên
+                            {selectedConversation?.conversation?.participants?.length} thành viên
                         </p>
                     </div>
                 </div>
@@ -161,70 +186,25 @@ const ChatWindow = ({ id }) => {
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4">
-                {conversation?.messages?.map(message => renderMessage(message))}
+                {selectedConversation?.messages?.items?.map(message => renderMessage(message))}
                 <div ref={messagesEndRef} />
             </div>
 
             {/* Input */}
-            <div className="p-4 border-t">
-                <div className="flex items-center gap-2">
-                    {/* Input field */}
-                    <div className="flex-1 flex items-center bg-gray-100 rounded-full px-4">
-                        <Popover 
-                            content={emojiPickerContent}
-                            trigger="click"
-                            placement="topRight"
-                            overlayClassName="emoji-picker-popover"
-                            open={showEmoji}
-                            onOpenChange={setShowEmoji}
-                        >
-                            <Button 
-                                type="text" 
-                                icon={<FaRegSmile className="w-5 h-5" />}
-                                className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200"
-                            />
-                        </Popover>
+            <InputMessage
+                onSendMessage={handleSendMessage}
+                conversationId={selectedConversation?.conversation?.id}
+            />
 
-                        <Input
-                            value={newMessage}
-                            onChange={(e) => setNewMessage(e.target.value)}
-                            onPressEnter={(e) => {
-                                if (!e.shiftKey) {
-                                    e.preventDefault();
-                                    handleSendMessage();
-                                }
-                            }}
-                            placeholder="Aa"
-                            bordered={false}
-                            className="flex-1 bg-transparent"
-                        />
-
-                        <div className="flex items-center gap-1">
-                            {inputButtons.map((button, index) => (
-                                <Tooltip key={index} title={button.tooltip} placement="top">
-                                    <Button 
-                                        type="text" 
-                                        icon={button.icon}
-                                        className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200"
-                                    />
-                                </Tooltip>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Send button */}
-                    <Tooltip title={newMessage.trim() ? "Gửi" : "Gửi like"}>
-                        <Button
-                            type="text"
-                            onClick={handleSendMessage}
-                            icon={newMessage.trim() ? <FaPaperPlane className="w-5 h-5" /> : <FaThumbsUp className="w-5 h-5" />}
-                            className={`flex items-center justify-center w-10 h-10 rounded-full ${
-                                newMessage.trim() ? 'text-blue-500 hover:bg-blue-50' : 'text-gray-500 hover:bg-gray-100'
-                            }`}
-                        />
-                    </Tooltip>
-                </div>
-            </div>
+            {/* Video Call Modal */}
+            <VideoCall
+                visible={isCallVisible}
+                onClose={handleEndCall}
+                token={token}
+                channelName={selectedConversation?.conversation?.id}
+                appId={process.env.REACT_APP_AGORA_APP_ID}
+                isVideo={isVideoCall}
+            />
         </div>
     );
 };

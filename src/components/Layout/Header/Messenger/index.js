@@ -5,19 +5,42 @@ import { getTimeAgo } from "../../../../utils/time";
 import "./styles.css";
 import { MdOutlineZoomOutMap } from "react-icons/md";
 import { IoCreateOutline } from "react-icons/io5";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChatPopup from "./ChatPopup";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { clearUnreadMessages } from "../../../../redux/features/messenger/messengerSlice";
+import { useWebSocket } from "../../../../providers/WebSocketProvider";
 
 const ListMessenger = () => {
     const { data: conversations } = useGetConversation();
     const [activeChat, setActiveChat] = useState(null);
     const userData = useSelector((state) => state?.user?.user);
+    const unreadMessages = useSelector((state) => state.messenger.unreadMessages);
+    const dispatch = useDispatch();
+    const { newMessageInfo, setNewMessageInfo } = useWebSocket();
+
+    // Lắng nghe tin nhắn mới và mở popup
+    useEffect(() => {
+        if (newMessageInfo && !activeChat) {
+            setActiveChat(newMessageInfo.conversation);
+            dispatch(clearUnreadMessages({ conversationId: newMessageInfo.conversation.id }));
+            setNewMessageInfo(null); // Reset để không mở lại popup khi component re-render
+        }
+    }, [newMessageInfo, activeChat, dispatch, setNewMessageInfo]);
 
     const handleChatClick = (conversation) => {
         setActiveChat(conversation);
+        dispatch(clearUnreadMessages({ conversationId: conversation.id }));
     };
+
+    const handleCloseChat = () => {
+        setActiveChat(null);
+        setNewMessageInfo(null); // Đảm bảo reset newMessageInfo khi đóng chat
+    };
+
+    // Tính tổng số tin nhắn chưa đọc
+    const totalUnreadMessages = Object.values(unreadMessages).reduce((sum, count) => sum + count, 0);
 
     const getConversationInfo = (conversation) => {
         if (conversation.type === 'private') {
@@ -56,6 +79,7 @@ const ListMessenger = () => {
     const conversationItems = conversations?.data?.map((conversation, index) => {
         const info = getConversationInfo(conversation);
         const isCurrentUserLastMessage = conversation?.last_message?.sender?.id === userData?.user?.id;
+        const unreadCount = unreadMessages[conversation.id] || 0;
 
         return {
             key: index.toString(),
@@ -67,16 +91,23 @@ const ListMessenger = () => {
                     {renderAvatar(conversation)}
                     <div className="flex flex-col flex-1 min-w-0">
                         <div className="flex justify-between items-center">
-                            <span className="font-semibold text-[15px] text-gray-900">
+                            <span className={`font-semibold text-[15px] ${unreadCount > 0 ? 'text-blue-600' : 'text-gray-900'}`}>
                                 {info.name}
                             </span>
                             <span className="text-xs text-gray-500 whitespace-nowrap ml-2">
                                 {getTimeAgo(conversation?.last_message?.created_at)}
                             </span>
                         </div>
-                        <span className="text-sm text-gray-500 truncate">
-                            {isCurrentUserLastMessage ? 'Bạn: ' : ''}{conversation?.last_message?.content}
-                        </span>
+                        <div className="flex justify-between items-center">
+                            <span className={`text-sm truncate ${unreadCount > 0 ? 'text-blue-600 font-medium' : 'text-gray-500'}`}>
+                                {isCurrentUserLastMessage ? 'Bạn: ' : ''}{conversation?.last_message?.content}
+                            </span>
+                            {unreadCount > 0 && (
+                                <span className="ml-2 bg-blue-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                                    {unreadCount}
+                                </span>
+                            )}
+                        </div>
                     </div>
                 </div>
             ),
@@ -113,15 +144,22 @@ const ListMessenger = () => {
                     </div>
                 )}
             >
-                <button className="p-2 hover:bg-gray-200 rounded-full">
-                    <FaFacebookMessenger className="w-6 h-6" />
-                </button>
+                <div className="relative">
+                    <button className="p-2 hover:bg-gray-200 rounded-full">
+                        <FaFacebookMessenger className="w-6 h-6" />
+                    </button>
+                    {totalUnreadMessages > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                            {totalUnreadMessages}
+                        </span>
+                    )}
+                </div>
             </Dropdown>
 
             {activeChat && (
                 <ChatPopup
                     conversation={activeChat} 
-                    onClose={() => setActiveChat(null)}
+                    onClose={handleCloseChat}
                 />
             )}
         </>

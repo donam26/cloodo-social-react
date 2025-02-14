@@ -7,17 +7,20 @@ import HomeLayout from "../../layouts/Home";
 import MessengerLayout from "../../layouts/Messenger";
 import FriendLayout from "../../layouts/Friend";
 import GroupLayout from "../../layouts/Group";
+import SearchLayout from "../../layouts/Search";
 import ProfileLayout from "../../layouts/Profile";
 import ProfileDetail from "../../pages/Profile/Detail";
 import FriendPage from "../../pages/Friend";
 import LivestreamPage from "../../pages/Livestream";
 import VideoPage from "../../pages/Video";
 import VideoLayout from "../../layouts/Video";
-    
+import SearchPage from "../../pages/Search";
+import PostDetail from "../../pages/PostDetail";
+
 const PrivateWrapper = ({ children }) => {
     const location = useLocation();
     const userData = localStorage.getItem('user_data');
-    
+
     // Nếu đang ở trang login và có token trong URL, cho phép render
     if (location.pathname === '/login' && location.search.includes('token=')) {
         return children;
@@ -122,5 +125,28 @@ export const privateRoutes = [
                 </ProfileLayout>
             </PrivateWrapper>
         }
+    />,
+    <Route
+        path="/search"
+        key="search"
+        element={
+            <PrivateWrapper>
+                <SearchLayout>
+                    <SearchPage />
+                </SearchLayout>
+            </PrivateWrapper>
+        }
+    />,
+    <Route
+        path="/posts/:id"
+        key="posts"
+        element={
+            <PrivateWrapper>
+                <PostDetail />
+            </PrivateWrapper>
+        }
     />
+
+
+
 ];

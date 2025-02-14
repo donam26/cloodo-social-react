@@ -1,0 +1,84 @@
+.video-call-modal .ant-modal-content {
+    background: #1a1a1a;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+}
+
+.local-video {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 200px;
+    height: 150px;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 2;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.remote-videos {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.remote-video {
+    width: 100%;
+    height: 100%;
+}
+
+.video-player {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.call-controls {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+    z-index: 3;
+}
+
+.control-button {
+    width: 50px !important;
+    height: 50px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: none !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.control-button:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.control-button.muted,
+.control-button.video-off {
+    background: rgba(255, 0, 0, 0.2) !important;
+}
+
+.end-call-button {
+    width: 50px !important;
+    height: 50px !important;
+    background: #dc3545 !important;
+    border: none !important;
+}
+
+.end-call-button:hover {
+    background: #c82333 !important;
+} 

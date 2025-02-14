@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getConversation, getMessages, getConversationById, sendMessage } from '../services/messengerApi';
+import { getConversation, getMessages, getConversationById, sendMessage, createConversation } from '../services/messengerApi';
 
 export const useGetConversation = () => {
   return useQuery({
@@ -23,13 +23,36 @@ export const useGetConversationById = (id) => {
 };
 
 export const useSendMessage = () => {
+  return useMutation({
+    mutationFn: sendMessage,
+  });
+};
+
+export const useCreateConversation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: sendMessage,
-    onSuccess: (data, variables) => {
-      // Cập nhật cache của conversation detail
-      queryClient.invalidateQueries(['conversation', variables.conversation_id]);
+    mutationFn: createConversation,
+    onSuccess: (data) => {
+      // Cập nhật cache danh sách cuộc trò chuyện
+      const oldConversations = queryClient.getQueryData(['conversations']);
+      if (oldConversations) {
+        queryClient.setQueryData(['conversations'], {
+          ...oldConversations,
+          data: [data.data, ...oldConversations.data]
+        });
+      }
+      
+      // Cập nhật cache chi tiết cuộc trò chuyện
+      queryClient.setQueryData(['conversation', data.data.id], {
+        data: {
+          conversation: data.data,
+          messages: {
+            items: [],
+            total: 0
+          }
+        }
+      });
     }
   });
 };

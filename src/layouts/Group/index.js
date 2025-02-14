@@ -1,11 +1,16 @@
 import React from "react";
+import Header from "../../components/Layout/Header";
 
 const GroupLayout = ({ children }) => {
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-[1920px] mx-auto px-4">
-        <div className="py-4">{children}</div>
-      </div>
+    <div className="min-h-screen bg-white">
+      <Header />
+      {/* Main content */}
+      <main className="h-screen pt-16">
+        <div className="h-full max-w-[1920px] mx-auto">
+          {children}
+        </div>
+      </main>
     </div>
   );
 };
