@@ -2,10 +2,10 @@ import LiveStreamList from "../../components/Watch/Live/LiveStreamList";
 
 const LivestreamPage = () => {
     return (
-        <div className="flex flex-col gap-4">
+        <div className="container mx-auto px-4 py-6">
             <LiveStreamList />
         </div>
     );
-}
+};
 
 export default LivestreamPage;

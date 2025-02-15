@@ -108,7 +108,7 @@ const Story = () => {
       <div className="rounded-lg relative">
         <div
           ref={scrollContainerRef}
-          className="flex gap-2 overflow-x-auto custom-scrollbar scroll-smooth"
+          className="flex gap-2 overflow-x-auto h-[200px] custom-scrollbar scroll-smooth"
           style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {/* Create Story Item */}
@@ -135,7 +135,7 @@ const Story = () => {
           </div>
 
           {/* Story List */}
-          {stories?.data?.map((story, index) => (
+          {!isLoadingStories && stories?.data?.map((story, index) => (
             <StoryItem
               key={story.id}
               story={story}

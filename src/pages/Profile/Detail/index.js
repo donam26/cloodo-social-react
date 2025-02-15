@@ -87,8 +87,9 @@ const ProfileDetail = () => {
       ]
     };
 
+    console.log(friendStatus);
     switch (friendStatus) {
-      case 'none':
+      case 'null':
         return (
           <Button
             type="primary"
@@ -294,7 +295,6 @@ const ProfileDetail = () => {
               {profile.posts?.items?.map(post => (
                 <Post key={post.id} post={post} />
               ))}
-              {console.log(profile.posts)}
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ const SearchLayout = ({ children }) => {
                   <SideBarSearch />
                 </div>
               </div>
-              <main className="flex-1 min-w-0 pt-2">
+              <main className="flex-1 min-w-0 pt-4">
                 {children}
               </main>
             </div>
