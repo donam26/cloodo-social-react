@@ -11,6 +11,7 @@ import InputMessage from "./InputMessage";
 import { useCreateToken } from "../../hooks/meetHook";
 
 const ChatWindow = ({ selectedConversation }) => {
+    console.log(selectedConversation);
     const userData = useSelector((state) => state?.user?.user);
     const { mutate: sendMessage } = useSendMessage();
     const messagesEndRef = useRef(null);

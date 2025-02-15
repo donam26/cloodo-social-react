@@ -17,7 +17,7 @@ const MessengerPage = () => {
   const [showChatList, setShowChatList] = useState(true);
 
   useEffect(() => {
-    // Nếu có id trên URL và có dữ liệu chi tiết
+    // Luôn ưu tiên sử dụng dữ liệu từ conversationDetail nếu có
     if (id && conversationDetail?.data) {
       setSelectedConversation(conversationDetail.data);
       // Ẩn danh sách chat trên mobile khi có conversation được chọn
@@ -28,8 +28,15 @@ const MessengerPage = () => {
     // Nếu không có id nhưng có danh sách chat, tự động chọn chat đầu tiên
     else if (!id && conversations?.data?.length > 0) {
       const firstConversation = conversations.data[0];
+      // Thay vì set trực tiếp, chuyển hướng để lấy detail
       navigate(`/messenger/${firstConversation.id}`);
-      setSelectedConversation(firstConversation);
+    }
+    // Nếu có id nhưng không có detail và không có trong danh sách, có thể id không hợp lệ
+    else if (id && !conversationDetail?.data && conversations?.data) {
+      const conversationExists = conversations.data.some(conv => conv.id === id);
+      if (!conversationExists) {
+        navigate('/messenger');
+      }
     }
   }, [id, conversationDetail, conversations, navigate]);
 
