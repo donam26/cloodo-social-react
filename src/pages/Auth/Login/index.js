@@ -70,7 +70,8 @@ const Login = () => {
                     if (token) {
                         axiosInstance.get('/me', {
                             headers: {
-                                'Authorization': `Bearer ${token}`
+                                'Authorization': `Bearer ${token}`,
+                                'ngrok-skip-browser-warning': 'true'
                             }
                         }).then(response => {
                             dispatch(setUser(response.data.data));
