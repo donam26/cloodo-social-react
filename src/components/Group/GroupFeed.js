@@ -7,21 +7,6 @@ const GroupFeed = () => {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Create post */}
-      <div className="bg-white rounded-lg shadow-sm p-4">
-        <div className="flex gap-2">
-          <Avatar
-            src={userData?.user?.image}
-            alt="User avatar"
-            size={40}
-            className="rounded-full"
-          />
-          <button className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-left text-gray-500 hover:bg-gray-200">
-            Viết bài...
-          </button>
-        </div>
-      </div>
-
       {/* Posts */}
       {groupPosts.map((post) => (
         <div key={post.id} className="bg-white rounded-lg shadow-sm">

@@ -1,13 +1,14 @@
 import { FaUserPlus } from "react-icons/fa";
 import { Avatar } from "antd";
 import { groupSuggestions } from "../../data/groups";
-
+import { useGetGroupSuggestions } from "../../hooks/groupHook";
 const GroupSuggestions = () => {
+  const { data: groupSuggestions } = useGetGroupSuggestions();
   return (
     <div className="bg-white rounded-lg shadow-sm p-4">
       <h2 className="text-xl font-semibold mb-4">Gợi ý cho bạn</h2>
       <div className="flex flex-col gap-4">
-        {groupSuggestions.map((group) => (
+        {groupSuggestions?.data?.map((group) => (
           <div key={group.id} className="flex items-center gap-3">
             <Avatar
               src={group?.avatar}

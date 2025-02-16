@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { BiMessageRounded, BiDotsHorizontalRounded } from "react-icons/bi";
+import { BiMessageRounded } from "react-icons/bi";
 import { FaUserPlus, FaUserMinus, FaUserTimes } from "react-icons/fa";
 import { Avatar, Dropdown, Button, Skeleton, message, Modal } from "antd";
 import { useGetProfile } from '../../../hooks/profileHook';

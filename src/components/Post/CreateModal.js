@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import { useCreatePost } from "../../hooks/postHook";
 import { useForm, Controller } from "react-hook-form";
+import { Link, useParams } from "react-router-dom";
 
 const { TextArea } = Input;
 
@@ -21,6 +22,7 @@ const CreatePostModal = () => {
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
+  const { groupId: routeGroupId } = useParams(); 
 
   const { mutate: createPost, isPending: isPendingCreatePost } = useCreatePost();
   const userData = useSelector((state) => state?.user?.user);
@@ -30,6 +32,7 @@ const CreatePostModal = () => {
       content: "",
       privacy: "public",
       fileList: [],
+      groupId: routeGroupId || null, 
     },
   });
 
@@ -214,13 +217,14 @@ const CreatePostModal = () => {
             <span>😊</span>
             <span>Cảm xúc</span>
           </button>
-          <button
-            className="flex items-center gap-2 text-gray-600 hover:bg-gray-100 px-4 py-2 rounded-lg"
-            onClick={() => setIsCreatePostModalOpen(true)}
-          >
-            <span>📍</span>
-            <span>Check in</span>
-          </button>
+          <Link to="/livestream">
+            <button
+              className="flex items-center gap-2 text-gray-600 hover:bg-gray-100 px-4 py-2 rounded-lg"
+            >
+            <span>🎥</span>
+              <span>Live Stream</span>
+            </button>
+          </Link>
         </div>
       </div>
 

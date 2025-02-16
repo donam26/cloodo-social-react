@@ -16,6 +16,10 @@ import VideoPage from "../../pages/Video";
 import VideoLayout from "../../layouts/Video";
 import SearchPage from "../../pages/Search";
 import PostDetail from "../../pages/PostDetail";
+import GroupDetailPage from "../../pages/Groups/Detail";
+import YourGroups from "../../pages/Groups/YourGroups";
+import LivestreamLayout from "../../layouts/Livestream";
+import CreateLivestream from "../../pages/Livestream/Create";
 
 const PrivateWrapper = ({ children }) => {
     const location = useLocation();
@@ -89,17 +93,63 @@ export const privateRoutes = [
         key="livestream"
         element={
             <PrivateWrapper>
-                <LivestreamPage />
+                <LivestreamLayout>
+                    <LivestreamPage />
+                </LivestreamLayout>
             </PrivateWrapper>
         }
     />,
     <Route
-        path="/group"
+        path="/livestream/create"
+        key="livestream-create"
+        element={
+            <PrivateWrapper>
+                <LivestreamLayout>
+                    <CreateLivestream />
+                </LivestreamLayout>
+            </PrivateWrapper>
+        }
+    />,
+    <Route
+        path="/groups"
         key="group"
         element={
             <PrivateWrapper>
                 <GroupLayout>
                     <Groups />
+                </GroupLayout>
+            </PrivateWrapper>
+        }
+    />,
+    <Route
+        path="/groups/discover"
+        key="group"
+        element={
+            <PrivateWrapper>
+                <GroupLayout>
+                    <Groups />
+                </GroupLayout>
+            </PrivateWrapper>
+        }
+    />,
+    <Route
+        path="/groups/your-groups"
+        key="your-groups"
+        element={
+            <PrivateWrapper>
+                <GroupLayout>
+                    <YourGroups />
+                </GroupLayout>
+            </PrivateWrapper>
+        }
+    />,
+    <Route
+        path="/group/:groupId"
+        key="group"
+        element={
+            <PrivateWrapper>
+                <GroupLayout>
+                    <GroupDetailPage />
                 </GroupLayout>
             </PrivateWrapper>
         }

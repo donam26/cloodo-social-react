@@ -70,9 +70,6 @@ const Header = () => {
 
         {/* Right section */}
         <div className="flex items-center gap-2">
-          <button className="p-2 hover:bg-gray-100 rounded-full">
-            <IoGridSharp className="w-6 h-6" />
-          </button>
           <ListMessenger />
           <Notification />
           <Space direction="vertical">

@@ -22,7 +22,7 @@ const Sidebar = () => {
         <MessageOutlined className="w-6 h-6" style={{ color: '#41B35D' }} />
         <span>Tin nhắn</span>
       </Link>
-      <Link className="flex items-center gap-2 hover:bg-gray-200 p-2 rounded-md" to="/group">
+      <Link className="flex items-center gap-2 hover:bg-gray-200 p-2 rounded-md" to="/groups">
         <MdGroups2 className="w-6 h-6" style={{ color: '#1B74E4' }} />
         <span>Nhóm</span>
       </Link>

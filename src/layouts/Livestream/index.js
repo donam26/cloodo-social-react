@@ -1,7 +1,7 @@
 import Header from "../../components/Layout/Header";
-import SidebarGroup from "../../components/Layout/SidebarGroup";
+import SidebarLivestream from "../../components/Layout/SidebarLivestream";
 
-const GroupLayout = ({ children }) => {
+const LivestreamLayout = ({ children }) => {
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
@@ -9,7 +9,8 @@ const GroupLayout = ({ children }) => {
         <div className="max-w-[1920px] mx-auto px-4 mt-2">
           <div className="flex gap-4">
             {/* Sidebar */}
-            <SidebarGroup />
+            <SidebarLivestream />
+            
             {/* Main Content */}
             <main className="flex-1 min-w-0">
               {children}
@@ -21,4 +22,4 @@ const GroupLayout = ({ children }) => {
   );
 };
 
-export default GroupLayout;
+export default LivestreamLayout; 
