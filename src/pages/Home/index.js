@@ -1,12 +1,13 @@
 import Post from "../../components/Post";
 import Story from "../../components/Story";
 import { useGetPost } from "../../hooks/postHook";
-import CreatePost from "../../components/Post/CreateModal";
+import CreatePostModal from "../../components/Post/CreateModal";
 import { FaUserFriends } from "react-icons/fa";
-import { Link } from "react-router-dom";  
+import { Link } from "react-router-dom";
+import { useState } from "react";
 const Home = () => {
   const { data: posts, isPending } = useGetPost();
-  
+
   const NoPostsMessage = () => (
     <div className="bg-white rounded-lg shadow-sm p-8 text-center">
       <div className="flex flex-col items-center gap-4">
@@ -17,10 +18,11 @@ const Home = () => {
           Chưa có bài viết nào để hiển thị
         </h3>
         <p className="text-gray-600 max-w-md">
-          Hãy kết bạn với nhiều người hơn để xem các bài viết thú vị của họ. 
-          Bạn cũng có thể chia sẻ những khoảnh khắc của mình để kết nối với mọi người!
+          Hãy kết bạn với nhiều người hơn để xem các bài viết thú vị của họ. Bạn
+          cũng có thể chia sẻ những khoảnh khắc của mình để kết nối với mọi
+          người!
         </p>
-        <Link to="/friend"> 
+        <Link to="/friend">
           <button className="mt-2 px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors duration-200 font-medium">
             Tìm bạn mới
           </button>
@@ -32,7 +34,7 @@ const Home = () => {
   return (
     <div className="flex flex-col gap-4">
       <Story />
-      <CreatePost />
+      <CreatePostModal />
       {isPending ? (
         <>
           <Post isLoading={true} />
