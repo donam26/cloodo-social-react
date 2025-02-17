@@ -8,7 +8,7 @@ import EmojiPickerPopover from "./EmojiPickerPopover";
 import VideoCall from "./VideoCall";
 import "./VideoCall.css";
 import InputMessage from "./InputMessage";
-import { useCreateToken } from "../../hooks/meetHook";
+import { useCreate } from "../../hooks/meetHook";
 
 const ChatWindow = ({ selectedConversation }) => {
     console.log(selectedConversation);
@@ -112,9 +112,9 @@ const ChatWindow = ({ selectedConversation }) => {
     };
 
     const info = getConversationInfo();
-    const { mutate: createToken } = useCreateToken();
+    const { mutate: createChannel } = useCreateChannel();
     const handleStartCall = (video = false) => {
-        createToken({
+        createChannel({
             channelName: selectedConversation?.conversation?.id,
             uid: userData?.user?.id,
         }, {

@@ -8,12 +8,14 @@ import {
   FaHistory,
   FaRegClock,
   FaHeart,
+  FaWatchmanMonitoring,
 } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Avatar } from "antd";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { Input, Button, Drawer } from "antd";
+import { FaTv } from "react-icons/fa6";
 
 const SidebarLivestream = () => {
   const userData = useSelector((state) => state?.user?.user);
@@ -25,39 +27,15 @@ const SidebarLivestream = () => {
   const menuItems = [
     {
       icon: <FaVideo />,
-      label: "Bảng tin",
+      label: "Trực tiếp",
       key: "feed",
-      onClick: () => navigate("/livestream"),
+      onClick: () => navigate("/livestreams"),
     },
     {
-      icon: <FaGamepad />,
-      label: "Game",
-      key: "gaming",
-      onClick: () => navigate("/livestream/gaming"),
-    },
-    {
-      icon: <FaRegCalendarAlt />,
-      label: "Sự kiện",
-      key: "events",
-      onClick: () => navigate("/livestream/events"),
-    },
-    {
-      icon: <FaHistory />,
-      label: "Video đã xem",
-      key: "history",
-      onClick: () => navigate("/livestream/history"),
-    },
-    {
-      icon: <FaRegClock />,
-      label: "Xem sau",
-      key: "watch-later",
-      onClick: () => navigate("/livestream/watch-later"),
-    },
-    {
-      icon: <FaHeart />,
-      label: "Yêu thích",
-      key: "favorites",
-      onClick: () => navigate("/livestream/favorites"),
+      icon: <FaTv />,
+      label: "Video",
+      key: "video",
+      onClick: () => navigate("/livestreams/video"),
     },
   ];
 
@@ -84,7 +62,7 @@ const SidebarLivestream = () => {
           icon={<FaVideo />}
           className="w-full flex items-center gap-2 justify-center"
           size="large"
-          onClick={() => navigate("/livestream/create")}
+          onClick={() => navigate("/livestreams/create")}
         >
           Bắt đầu livestream
         </Button>
@@ -107,28 +85,6 @@ const SidebarLivestream = () => {
         </Button>
       ))}
 
-      {/* Divider */}
-      <div className="border-t my-2"></div>
-
-      {/* Channels you follow */}
-      <div className="px-2">
-        <h3 className="text-gray-500 font-medium mb-2 px-2">Kênh đang theo dõi</h3>
-        <div className="space-y-1">
-          {/* Add followed channels list here */}
-          <div className="text-center py-4 px-2">
-            <p className="text-gray-500 text-sm">
-              Bạn chưa theo dõi kênh nào
-            </p>
-            <Button
-              type="link"
-              onClick={() => navigate("/livestream/discover")}
-              className="mt-2"
-            >
-              Khám phá thêm
-            </Button>
-          </div>
-        </div>
-      </div>
     </div>
   );
 
@@ -138,7 +94,7 @@ const SidebarLivestream = () => {
       <div className="hidden lg:block w-[300px] xl:w-[360px] shrink-0">
         <div className="sticky top-4 bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="p-4 border-b">
-            <h2 className="text-2xl font-bold">Livestream</h2>
+            <h2 className="text-2xl font-bold">Giải trí</h2>
           </div>
           <div className="p-2">{renderSidebar()}</div>
         </div>

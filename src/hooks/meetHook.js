@@ -1,8 +1,14 @@
-import { createToken } from "../services/meetApi";
+import { createChannel, joinChannel } from "../services/meetApi";
 import { useMutation } from "@tanstack/react-query";
 
-export const useCreateToken = () => {
+export const useCreateChannel = () => {
     return useMutation({
-      mutationFn: createToken,
+      mutationFn: createChannel,
+    });
+  };
+
+  export const useJoinChannel = () => {
+    return useMutation({
+      mutationFn: joinChannel,
     });
   };

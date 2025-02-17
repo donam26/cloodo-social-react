@@ -20,6 +20,8 @@ import GroupDetailPage from "../../pages/Groups/Detail";
 import YourGroups from "../../pages/Groups/YourGroups";
 import LivestreamLayout from "../../layouts/Livestream";
 import CreateLivestream from "../../pages/Livestream/Create";
+import LiveStudioPage from "../../pages/Livestream/Studio";
+import WatchLiveStreamPage from "../../pages/Livestream/Watch";
 
 const PrivateWrapper = ({ children }) => {
     const location = useLocation();
@@ -89,7 +91,7 @@ export const privateRoutes = [
         }
     />,
     <Route
-        path="/livestream"
+        path="/livestreams"
         key="livestream"
         element={
             <PrivateWrapper>
@@ -100,12 +102,34 @@ export const privateRoutes = [
         }
     />,
     <Route
-        path="/livestream/create"
+        path="/livestreams/create"
         key="livestream-create"
         element={
             <PrivateWrapper>
                 <LivestreamLayout>
                     <CreateLivestream />
+                </LivestreamLayout>
+            </PrivateWrapper>
+        }
+    />,
+    <Route
+        path="/livestreams/studio"
+        key="livestream-studio"
+        element={
+            <PrivateWrapper>
+                <LivestreamLayout>
+                    <LiveStudioPage />
+                </LivestreamLayout>
+            </PrivateWrapper>
+        }
+    />,
+    <Route
+        path="/livestreams/watch/:channelName"
+        key="livestream-watch"
+        element={
+            <PrivateWrapper>
+                <LivestreamLayout>
+                    <WatchLiveStreamPage />
                 </LivestreamLayout>
             </PrivateWrapper>
         }
@@ -196,7 +220,4 @@ export const privateRoutes = [
             </PrivateWrapper>
         }
     />
-
-
-
 ];
