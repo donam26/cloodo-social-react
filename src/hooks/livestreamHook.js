@@ -1,5 +1,25 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getLiveStream, createLiveStream } from '../services/livestreamApi';
+import { createChannel, joinChannel, endLiveStream, getLiveStream, createLiveStream } from "../services/livestreamApi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+
+
+export const useCreateChannel = () => {
+  return useMutation({
+    mutationFn: createChannel,
+  });
+};
+
+export const useJoinChannel = () => {
+  return useMutation({
+    mutationFn: joinChannel,
+  });
+};
+
+export const useEndLiveStream = () => {
+  return useMutation({
+    mutationFn: endLiveStream,
+  });
+};
+
 
 export const useGetLiveStream = () => {
   return useQuery({

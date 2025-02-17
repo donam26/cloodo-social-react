@@ -1,23 +1,20 @@
-import { Avatar, Input, Button, Tooltip, Popover } from "antd";
-import { useGetConversationById, useSendMessage } from "../../hooks/messengerHook";
+import { Avatar, Button, Tooltip } from "antd";
+import { useSendMessage } from "../../hooks/messengerHook";
 import { useSelector } from "react-redux";
 import { getTimeAgo } from "../../utils/time";
 import { useEffect, useRef, useState, useMemo } from "react";
-import { FaRegSmile, FaImage, FaThumbsUp, FaPaperPlane, FaPhone, FaVideo, FaInfoCircle } from "react-icons/fa";
-import EmojiPickerPopover from "./EmojiPickerPopover";
+import { FaPhone, FaVideo, FaInfoCircle } from "react-icons/fa";
 import VideoCall from "./VideoCall";
 import "./VideoCall.css";
 import InputMessage from "./InputMessage";
-import { useCreate } from "../../hooks/meetHook";
+import { useCreateChannel } from "../../hooks/meetHook";
 
 const ChatWindow = ({ selectedConversation }) => {
     console.log(selectedConversation);
     const userData = useSelector((state) => state?.user?.user);
     const { mutate: sendMessage } = useSendMessage();
     const messagesEndRef = useRef(null);
-    const [newMessage, setNewMessage] = useState("");
-    const [showEmoji, setShowEmoji] = useState(false);
-    const [isCallVisible, setIsCallVisible] = useState(false);
+        const [isCallVisible, setIsCallVisible] = useState(false);
     const [isVideoCall, setIsVideoCall] = useState(false);
     const [token, setToken] = useState(null);
 
@@ -89,19 +86,6 @@ const ChatWindow = ({ selectedConversation }) => {
             </div>
         );
     };
-
-    const handleEmojiClick = (emojiData) => {
-        setNewMessage(prev => prev + emojiData.emoji);
-        setShowEmoji(false);
-    };
-
-    const emojiPickerContent = useMemo(() => (
-        <EmojiPickerPopover onEmojiClick={handleEmojiClick} />
-    ), []);
-
-    const inputButtons = useMemo(() => [
-        { icon: <FaImage className="w-5 h-5" />, tooltip: 'Thêm ảnh' },
-    ], []);
 
     const handleSendMessage = (conversationId, content) => {
         sendMessage({ conversationId, content }, {

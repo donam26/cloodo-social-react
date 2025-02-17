@@ -9,3 +9,4 @@ export const joinChannel = async (data) => {
     const response = await axiosInstance.post(`/agora/viewer/token`, data);
     return response.data;
 };
+
