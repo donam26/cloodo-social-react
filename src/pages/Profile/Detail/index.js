@@ -69,6 +69,17 @@ const ProfileDetail = () => {
     if (isLoading) return <Skeleton.Button active />;
     if (isSelf) return null;
 
+    const messageButton = (
+      <Button
+        type="primary"
+        icon={<BiMessageRounded className="text-xl" />}
+        onClick={handleMessage}
+        className="bg-blue-500 hover:bg-blue-600 flex items-center gap-2"
+      >
+        <span>Nhắn tin</span>
+      </Button>
+    );
+
     const dropdownItems = {
       items: [
         {
@@ -87,33 +98,38 @@ const ProfileDetail = () => {
       ]
     };
 
-    console.log(friendStatus);
     switch (friendStatus) {
       case 'null':
         return (
-          <Button
-            type="primary"
-            icon={<FaUserPlus />}
-            loading={loadingAction}
-            onClick={() => handleFriendAction('request')}
-            className="bg-blue-500 hover:bg-blue-600"
-          >
-            Thêm bạn bè
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              type="primary"
+              icon={<FaUserPlus />}
+              loading={loadingAction}
+              onClick={() => handleFriendAction('request')}
+              className="bg-blue-500 hover:bg-blue-600"
+            >
+              Thêm bạn bè
+            </Button>
+            {messageButton}
+          </div>
         );
       
       case 'pending_sent':
         return (
-          <Button
-            icon={<FaUserMinus />}
-            loading={loadingAction}
-            onClick={() => handleFriendAction('cancel')}
-            className="bg-gray-200 hover:bg-gray-300 text-black"
-          >
-            <div className="flex items-center gap-2">
-              <span>Đã gửi lời mời</span>
-            </div>
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              icon={<FaUserMinus />}
+              loading={loadingAction}
+              onClick={() => handleFriendAction('cancel')}
+              className="bg-gray-200 hover:bg-gray-300 text-black"
+            >
+              <div className="flex items-center gap-2">
+                <span>Đã gửi lời mời</span>
+              </div>
+            </Button>
+            {messageButton}
+          </div>
         );
 
       case 'pending':
@@ -134,6 +150,7 @@ const ProfileDetail = () => {
             >
               Xóa
             </Button>
+            {messageButton}
           </div>
         );
 
@@ -148,19 +165,12 @@ const ProfileDetail = () => {
                 <span>Bạn bè</span>
               </Button>
             </Dropdown>
-            <Button
-              type="primary"
-              icon={<BiMessageRounded className="text-xl" />}
-              onClick={handleMessage}
-              className="bg-blue-500 hover:bg-blue-600 flex items-center gap-2"
-            >
-              <span>Nhắn tin</span>
-            </Button>
+            {messageButton}
           </div>
         );
 
       default:
-        return null;
+        return messageButton;
     }
   };
 

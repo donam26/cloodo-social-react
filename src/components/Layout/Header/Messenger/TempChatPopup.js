@@ -22,7 +22,8 @@ const TempChatPopup = ({ user, onClose, onConversationCreated }) => {
                 content 
             });
 
-            // Thông báo cho component cha biết cuộc trò chuyện đã được tạo
+            // Đóng TempChatPopup và mở ChatPopup với cuộc trò chuyện mới
+            onClose();
             onConversationCreated(result.data);
         } catch (error) {
             console.error('Error creating conversation:', error);
