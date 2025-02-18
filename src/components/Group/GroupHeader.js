@@ -29,17 +29,14 @@ const GroupHeader = () => {
       <Tabs
         items={[
           {
-            key: "feed",
-            label: "Bảng tin của bạn",
+            key: "groups",
+            label: "Nhóm của bạn",
           },
           {
             key: "discover",
             label: "Khám phá",
           },
-          {
-            key: "your-groups",
-            label: "Nhóm của bạn",
-          },
+         
         ]}
         className="px-4"
       />

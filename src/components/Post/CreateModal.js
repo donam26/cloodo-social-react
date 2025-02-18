@@ -23,6 +23,7 @@ const CreatePostModal = () => {
   const [previewTitle, setPreviewTitle] = useState("");
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const { groupId: routeGroupId } = useParams(); 
+  console.log(routeGroupId);
 
   const { mutate: createPost, isPending: isPendingCreatePost } = useCreatePost();
   const userData = useSelector((state) => state?.user?.user);
@@ -30,7 +31,7 @@ const CreatePostModal = () => {
   const { control, handleSubmit, reset, watch, setValue } = useForm({
     defaultValues: {
       content: "",
-      privacy: "public",
+      status: "public",
       fileList: [],
       groupId: routeGroupId || null, 
     },
@@ -67,8 +68,9 @@ const CreatePostModal = () => {
   const resetForm = () => {
     reset({
       content: "",
-      privacy: "public",
+      status: "public",
       fileList: [],
+      groupId: routeGroupId || null,
     });
     setIsCreatePostModalOpen(false);
   };
@@ -86,8 +88,9 @@ const CreatePostModal = () => {
 
       const postData = {
         content: data.content,
-        privacy: data.privacy,
+        status: data.status,
         images,
+        groupId: data.groupId,
       };
 
       createPost(postData, {
@@ -113,7 +116,7 @@ const CreatePostModal = () => {
     </div>
   );
 
-  const privacyOptions = [
+  const statusOptions = [
     {
       key: "public",
       label: (
@@ -158,8 +161,8 @@ const CreatePostModal = () => {
     },
   ];
 
-  const getPrivacyIcon = (privacy) => {
-    switch (privacy) {
+  const getStatusIcon = (status) => {
+    switch (status) {
       case "public":
         return <FaGlobeAsia className="text-gray-600 w-4 h-4" />;
       case "friends":
@@ -171,8 +174,8 @@ const CreatePostModal = () => {
     }
   };
 
-  const getPrivacyText = (privacy) => {
-    switch (privacy) {
+  const getStatusText = (status) => {
+    switch (status) {
       case "public":
         return "Công khai";
       case "friends":
@@ -264,19 +267,19 @@ const CreatePostModal = () => {
             <div>
               <h4 className="font-medium">{userData?.user?.name}</h4>
               <Controller
-                name="privacy"
+                name="status"
                 control={control}
                 render={({ field }) => (
                   <Dropdown
                     menu={{
-                      items: privacyOptions,
+                      items: statusOptions,
                       onClick: ({ key }) => field.onChange(key),
                     }}
                     trigger={["click"]}
                   >
                     <button className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 rounded-md px-2 py-1">
-                      {getPrivacyIcon(field.value)}
-                      <span className="text-sm">{getPrivacyText(field.value)}</span>
+                      {getStatusIcon(field.value)}
+                      <span className="text-sm">{getStatusText(field.value)}</span>
                     </button>
                   </Dropdown>
                 )}

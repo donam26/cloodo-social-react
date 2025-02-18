@@ -33,15 +33,9 @@ const SidebarGroup = () => {
   const menuItems = [
     {
       icon: <FaUserFriends />,
-      label: "Bảng tin",
-      key: "feed",
-      onClick: () => navigate("/groups"),
-    },
-    {
-      icon: <FaUserFriends />,
       label: "Nhóm của bạn",
-      key: "your-groups",
-      onClick: () => navigate("/groups/your-groups"),
+      key: "groups",
+      onClick: () => navigate("/groups"),
     },
     {
       icon: <FaCompass />,

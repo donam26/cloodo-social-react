@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Button } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FaPlus, FaCog } from "react-icons/fa";
-import GroupFeed from "../../components/Group/GroupFeed";
 import GroupSuggestions from "../../components/Group/GroupSuggestions";
 import CreateGroupModal from "../../components/Group/CreateGroupModal";
 
@@ -19,7 +18,7 @@ const GroupsPage = () => {
 
   const renderContent = () => {
     switch (activeTab) {
-      case "your-groups":
+      case "groups":
         return (
           <div className="space-y-4">
             <div className="bg-white rounded-xl shadow-sm p-4">
@@ -45,26 +44,6 @@ const GroupsPage = () => {
           </div>
         );
       default:
-        return (
-          <>
-            {/* Feed Header */}
-            <div className="bg-white rounded-xl shadow-sm p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h1 className="text-2xl font-bold">Bảng tin nhóm</h1>
-                <Button
-                  type="primary"
-                  icon={<FaPlus />}
-                  size="large"
-                  className="rounded-lg"
-                  onClick={() => setIsCreateModalOpen(true)}
-                >
-                  Tạo nhóm mới
-                </Button>
-              </div>
-            </div>
-            <GroupFeed />
-          </>
-        );
     }
   };
 

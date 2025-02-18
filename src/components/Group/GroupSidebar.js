@@ -9,13 +9,6 @@ const GroupSidebar = () => {
       {/* Menu */}
       <div className="flex flex-col gap-2">
         <Link
-          href="/groups/feed"
-          className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg"
-        >
-          <FaBookmark className="w-5 h-5 text-blue-500" />
-          <span>Bảng tin</span>
-        </Link>
-        <Link
           href="/groups/discover"
           className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg"
         >
@@ -23,7 +16,7 @@ const GroupSidebar = () => {
           <span>Sự kiện</span>
         </Link>
         <Link
-          href="/groups/your-groups"
+          href="/groups"
           className="flex items-center gap-3 p-2 hover:bg-gray-100 rounded-lg"
         >
           <FaCog className="w-5 h-5 text-blue-500" />

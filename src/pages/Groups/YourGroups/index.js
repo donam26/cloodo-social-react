@@ -51,10 +51,6 @@ const YourGroups = () => {
       key: "admin",
       label: "Nhóm quản lý",
     },
-    {
-      key: "recent",
-      label: "Hoạt động gần đây",
-    },
   ];
 
   return (

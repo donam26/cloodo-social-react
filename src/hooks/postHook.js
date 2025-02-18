@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getPost, createPost, reactPost, createComment, deleteComment, getPostById } from '../services/postApi';
+import { getPost, createPost, reactPost, createComment, deleteComment, getPostById, updatePost, deletePost } from '../services/postApi';
+import { message } from 'antd';
 
 export const useGetPost = () => {
   return useQuery({
@@ -131,6 +132,48 @@ export const useDeleteComment = () => {
         // Cập nhật cache
         queryClient.setQueryData(['posts'], newData);
       }
+    }
+  });
+};
+
+export const useUpdatePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }) => updatePost(id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['posts']);
+      message.success('Cập nhật bài viết thành công');
+    },
+    onError: (error) => {
+      message.error(error.response?.data?.message || 'Có lỗi xảy ra khi cập nhật bài viết');
+    }
+  });
+};
+
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deletePost,
+    onSuccess: (_, postId) => {
+      // Lấy cache hiện tại
+      const oldData = queryClient.getQueryData(['posts']);
+      
+      if (oldData) {
+        // Cập nhật cache sau khi xóa bài viết
+        const newData = {
+          ...oldData,
+          data: oldData.data.filter(post => post.id !== postId)
+        };
+
+        // Cập nhật cache
+        queryClient.setQueryData(['posts'], newData);
+      }
+      message.success('Xóa bài viết thành công');
+    },
+    onError: (error) => {
+      message.error(error.response?.data?.message || 'Có lỗi xảy ra khi xóa bài viết');
     }
   });
 };

@@ -59,18 +59,18 @@ const NotificationItem = ({ notification }) => {
     <Link to={getNotificationLink()} onClick={handleClick}>
       <div className={`flex items-start gap-3 p-3 cursor-pointer hover:bg-gray-100 relative ${!notification.read_at ? 'bg-blue-50' : ''}`}>
         <div className="relative flex-shrink-0">
-          <Avatar src={notification.data.user.image} size={40} />
-          <NotificationIcon type={notification.type} />
+          <Avatar src={notification?.data?.user?.image} size={40} />
+          <NotificationIcon type={notification?.type} />
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between">
             <div className="flex-1 pr-2">
               <p className="text-sm text-gray-900">
-                <span className="font-semibold">{notification.data.user.name}</span>
-                {' '}{notification.data.message}
+                <span className="font-semibold">{notification?.data?.user?.name}</span>
+                {' '}{notification?.data?.message}
               </p>
               <span className="text-xs text-blue-500 font-medium">
-                {getTimeAgo(notification.created_at)}
+                {getTimeAgo(notification?.created_at)}
               </span>
             </div>
           </div>

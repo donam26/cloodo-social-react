@@ -138,7 +138,6 @@ const Sidebar = ({ conversation }) => {
         </div>
       </div>
 
-      {/* Privacy & Support */}
       <div className="py-4">
         <button className="w-full text-left p-2 hover:bg-gray-100 rounded-lg">
           <h3 className="font-medium">Quyền riêng tư & hỗ trợ</h3>

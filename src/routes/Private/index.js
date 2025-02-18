@@ -140,7 +140,7 @@ export const privateRoutes = [
         element={
             <PrivateWrapper>
                 <GroupLayout>
-                    <Groups />
+                <YourGroups />
                 </GroupLayout>
             </PrivateWrapper>
         }
@@ -156,17 +156,7 @@ export const privateRoutes = [
             </PrivateWrapper>
         }
     />,
-    <Route
-        path="/groups/your-groups"
-        key="your-groups"
-        element={
-            <PrivateWrapper>
-                <GroupLayout>
-                    <YourGroups />
-                </GroupLayout>
-            </PrivateWrapper>
-        }
-    />,
+  
     <Route
         path="/groups/:groupId"
         key="group"
