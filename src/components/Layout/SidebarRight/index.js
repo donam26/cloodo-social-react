@@ -49,7 +49,7 @@ const SidebarRight = () => {
 
   const getConversationInfo = (conversation) => {
     if (conversation.type === 'private') {
-        const otherMember = conversation?.participants?.find(member => member?.id !== conversation?.last_message?.sender?.id);
+        const otherMember = conversation?.participants?.find(member => member?.id !== userData?.user?.id);
         return {
             name: otherMember?.name,
             image: otherMember?.image
@@ -199,12 +199,6 @@ const SidebarRight = () => {
                         </span>
                       )}
                     </div>
-                    {conversation.last_message && (
-                      <p className="text-sm text-gray-500 truncate">
-                        {conversation.last_message.sender.id === userData?.id ? "Bạn: " : ""}
-                        {conversation.last_message.content}
-                      </p>
-                    )}
                   </div>
                 </button>
               );

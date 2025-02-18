@@ -5,51 +5,27 @@ import { FaUserPlus, FaUserMinus, FaUserTimes } from "react-icons/fa";
 import { Avatar, Dropdown, Button, Skeleton, message, Modal } from "antd";
 import { useGetProfile } from '../../../hooks/profileHook';
 import { useFriendAction } from '../../../hooks/friendHook';
-import { useCreateConversation } from '../../../hooks/messengerHook';
 import Post from '../../../components/Post';
 import ChatPopup from '../../../components/Layout/Header/Messenger/ChatPopup';
 import TempChatPopup from '../../../components/Layout/Header/Messenger/TempChatPopup';
 
 const ProfileDetail = () => {
   const { id } = useParams();
-  const [loadingAction, setLoadingAction] = useState(false);
   const [showAvatarModal, setShowAvatarModal] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [activeChat, setActiveChat] = useState(null);
   const { data: profileData, isLoading } = useGetProfile(id);
-  const { sendFriendAction } = useFriendAction();
-  const { mutate: createConversation } = useCreateConversation();
+  const { mutate: sendFriendAction, isPending: isSendingAction } = useFriendAction();
 
-  const profile = profileData?.profile;
-  const friendStatus = profileData?.friend_status;
-  const isSelf = profileData?.is_self;
-  console.log(friendStatus);
-
-  const handleFriendAction = async (action) => {
-    setLoadingAction(true);
-    try {
-      await sendFriendAction({ userId: id, action });
-      switch(action) {
-        case 'request':
-          message.success('Đã gửi lời mời kết bạn');
-          break;
-        case 'accept':
-          message.success('Đã chấp nhận lời mời kết bạn');
-          break;
-        case 'cancel':
-          message.success('Đã hủy kết bạn/lời mời');
-          break;
-        case 'block':
-          message.success('Đã chặn người dùng');
-          break;
-        default:
-          break;
+  const handleFriendAction = (action) => {
+    sendFriendAction(
+      { userId: id, action },
+      {
+        onError: () => {
+          message.error('Có lỗi xảy ra, vui lòng thử lại sau');
+        }
       }
-    } catch (error) {
-      message.error('Có lỗi xảy ra, vui lòng thử lại sau');
-    } finally {
-      setLoadingAction(false);
-    }
+    );
   };
 
   const handleMessage = () => {
@@ -67,7 +43,6 @@ const ProfileDetail = () => {
 
   const renderFriendButton = () => {
     if (isLoading) return <Skeleton.Button active />;
-    if (isSelf) return null;
 
     const messageButton = (
       <Button
@@ -98,14 +73,14 @@ const ProfileDetail = () => {
       ]
     };
 
-    switch (friendStatus) {
-      case 'null':
+    switch (profileData?.data?.friend_status) {
+      case null:
         return (
           <div className="flex gap-2">
             <Button
               type="primary"
               icon={<FaUserPlus />}
-              loading={loadingAction}
+              loading={isSendingAction}
               onClick={() => handleFriendAction('request')}
               className="bg-blue-500 hover:bg-blue-600"
             >
@@ -118,16 +93,29 @@ const ProfileDetail = () => {
       case 'pending_sent':
         return (
           <div className="flex gap-2">
-            <Button
-              icon={<FaUserMinus />}
-              loading={loadingAction}
-              onClick={() => handleFriendAction('cancel')}
-              className="bg-gray-200 hover:bg-gray-300 text-black"
+            <Dropdown 
+              menu={{
+                items: [
+                  {
+                    key: 'cancel',
+                    label: 'Hủy lời mời',
+                    icon: <FaUserMinus className="text-gray-600" />,
+                    onClick: () => handleFriendAction('cancel')
+                  }
+                ]
+              }} 
+              placement="bottomRight"
             >
-              <div className="flex items-center gap-2">
-                <span>Đã gửi lời mời</span>
-              </div>
-            </Button>
+              <Button
+                icon={<FaUserMinus />}
+                loading={isSendingAction}
+                className="bg-gray-200 hover:bg-gray-300 text-black"
+              >
+                <div className="flex items-center gap-2">
+                  <span>Đã gửi lời mời</span>
+                </div>
+              </Button>
+            </Dropdown>
             {messageButton}
           </div>
         );
@@ -137,14 +125,14 @@ const ProfileDetail = () => {
           <div className="flex gap-2">
             <Button
               type="primary"
-              loading={loadingAction}
+              loading={isSendingAction}
               onClick={() => handleFriendAction('accept')}
               className="bg-blue-500 hover:bg-blue-600"
             >
               Xác nhận
             </Button>
             <Button
-              loading={loadingAction}
+              loading={isSendingAction}
               onClick={() => handleFriendAction('cancel')}
               className="bg-gray-200 hover:bg-gray-300 text-black"
             >
@@ -179,8 +167,7 @@ const ProfileDetail = () => {
       <Skeleton active avatar paragraph={{ rows: 4 }} />
     </div>;
   }
-
-  if (!profile) return null;
+  if (!profileData) return null;
 
   return (
     <>
@@ -188,7 +175,7 @@ const ProfileDetail = () => {
         {/* Cover Image */}
         <div className="relative h-[350px] bg-gray-300">
           <img
-            src={profile.image_background || '/images/default-cover.jpg'}
+            src={profileData?.data?.image_background || '/images/default-cover.jpg'}
             alt="Cover"
             className="w-full h-full object-cover"
           />
@@ -201,8 +188,8 @@ const ProfileDetail = () => {
               {/* Avatar */}
               <div className="relative cursor-pointer group" onClick={() => setShowAvatarModal(true)}>
                 <Avatar
-                  src={profile?.image}
-                  alt={profile?.name}
+                  src={profileData?.data?.image}
+                  alt={profileData?.data?.name}
                   size={122}
                   className="rounded-full border-4 border-white transition-transform hover:opacity-90"
                 />
@@ -220,8 +207,8 @@ const ProfileDetail = () => {
                 centered
               >
                 <img
-                  src={profile?.image}
-                  alt={profile?.name}
+                  src={profileData?.data?.image}
+                  alt={profileData?.data?.name}
                   className="w-full rounded-lg"
                   style={{ maxHeight: '80vh', objectFit: 'contain' }}
                 />
@@ -231,10 +218,10 @@ const ProfileDetail = () => {
               <div className="flex-1">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h1 className="text-3xl font-bold mb-1">{profile?.name}</h1>
-                    {profile?.bio && <p className="text-gray-600 mb-2">{profile?.bio}</p>}
+                    <h1 className="text-3xl font-bold mb-1">{profileData?.data?.name}</h1>
+                    {profileData?.data?.bio && <p className="text-gray-600 mb-2">{profileData?.data?.bio}</p>}
                     <div className="flex items-center gap-6 text-gray-600">
-                      <span>{profile?.friends?.total || 0} bạn bè</span>
+                      <span>{profileData?.data?.friends?.total || 0} bạn bè</span>
                     </div>
                   </div>
                   <div className="flex gap-2">
@@ -270,22 +257,22 @@ const ProfileDetail = () => {
               {/* Giới thiệu */}
               <div className="bg-white rounded-lg shadow p-4">
                 <h2 className="font-semibold mb-4">Giới thiệu</h2>
-                {profile.bio ? (
-                  <p className="text-gray-600">{profile.bio}</p>
+                {profileData?.data?.bio ? (
+                  <p className="text-gray-600">{profileData?.data?.bio}</p>
                 ) : (
                   <p className="text-gray-500 italic">Chưa có thông tin giới thiệu</p>
                 )}
               </div>
 
               {/* Bạn bè */}
-              {profile.friends?.items?.length > 0 && (
+              {profileData?.data?.friends?.items?.length > 0 && (
                 <div className="bg-white rounded-lg shadow p-4">
                   <div className="flex justify-between items-center mb-4">
                     <h2 className="font-semibold">Bạn bè</h2>
-                    <span className="text-gray-500">{profile.friends.total} bạn bè</span>
+                    <span className="text-gray-500">{profileData?.data?.friends?.total} bạn bè</span>
                   </div>
                   <div className="grid grid-cols-3 gap-2">
-                    {profile.friends.items.slice(0, 9).map(friend => (
+                    {profileData?.data?.friends?.items?.slice(0, 9).map(friend => (
                         <Link to={`/profile/${friend.id}`} key={friend.id} className="text-center">
                           <Avatar 
                           src={friend.image} 
@@ -302,7 +289,7 @@ const ProfileDetail = () => {
 
             {/* Main Content - Posts */}
             <div className="col-span-2 space-y-4">
-              {profile.posts?.items?.map(post => (
+              {profileData?.data?.posts?.items?.map(post => (
                 <Post key={post.id} post={post} />
               ))}
             </div>
@@ -311,9 +298,9 @@ const ProfileDetail = () => {
       </div>
 
       {/* Chat Popups */}
-      {showChat && !activeChat && (
+      {showChat && !activeChat && !profileData?.data?.conversation && (
         <TempChatPopup
-          user={profile}
+          user={profileData?.data}
           onClose={handleCloseChat}
           onConversationCreated={handleConversationCreated}
         />

@@ -76,3 +76,54 @@
     background-color: #1877f2;
     border-radius: 50%;
 }
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide-in {
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+/* Thêm hiệu ứng hover cho popup */
+.notification-popup:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Custom scrollbar styles */
+.notification-dropdown-content .overflow-y-auto {
+    padding-right: 2px;
+}
+
+.notification-dropdown-content .overflow-y-auto::-webkit-scrollbar {
+    width: 4px;
+}
+
+.notification-dropdown-content .overflow-y-auto::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.notification-dropdown-content .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: #c2c2c2;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.notification-dropdown-content .overflow-y-auto::-webkit-scrollbar-thumb:hover {
+    background: #a0a0a0;
+}
+
+/* Ẩn thanh cuộn mặc định nhưng vẫn cho phép cuộn */
+.notification-dropdown-content .overflow-y-auto {
+    scrollbar-width: thin;
+    scrollbar-color: #c2c2c2 #f1f1f1;
+}

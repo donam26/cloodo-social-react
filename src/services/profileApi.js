@@ -7,7 +7,7 @@ export const getMyProfile = async () => {
 
 export const getProfile = async (id) => {
   const response = await axiosInstance.get(`/profile/${id}`);
-  return response.data?.data;
+  return response.data;
 };
 
 export const updateProfile = async (data) => {

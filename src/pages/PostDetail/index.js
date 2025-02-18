@@ -84,7 +84,7 @@ const PostDetail = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center ">
+    <div className="fixed inset-0 bg-gray-500 z-50 flex items-center justify-center ">
       {/* Close button */}
       <button 
         onClick={handleClose}

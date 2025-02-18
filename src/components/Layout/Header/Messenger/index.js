@@ -45,7 +45,7 @@ const ListMessenger = () => {
     const getConversationInfo = (conversation) => {
         if (conversation.type === 'private') {
             // Lấy thông tin người còn lại trong cuộc trò chuyện
-            const otherMember = conversation?.participants?.find(member => member?.id !== conversation?.last_message?.sender?.id);
+            const otherMember = conversation?.participants?.find(member => member?.id !== userData?.user?.id);
             return {
                 name: otherMember?.name,
                 image: otherMember?.image

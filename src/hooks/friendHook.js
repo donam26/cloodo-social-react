@@ -45,34 +45,24 @@ export const useFriendAction = () => {
       // Cập nhật cache tùy theo action
       switch (variables.action) {
         case 'request':
-          message.success('Đã gửi lời mời kết bạn');
-          // Cập nhật lại danh sách gợi ý
           queryClient.invalidateQueries(['friendSuggestions']);
           break;
           
         case 'accept':
-          message.success('Đã chấp nhận lời mời kết bạn');
-          // Cập nhật lại danh sách bạn bè và lời mời
           queryClient.invalidateQueries(['friends']);
           queryClient.invalidateQueries(['friendRequests']);
           break;
           
         case 'cancel':
-          message.success('Đã hủy kết bạn');
-          // Cập nhật lại danh sách bạn bè/lời mời
           queryClient.invalidateQueries(['friends']);
           queryClient.invalidateQueries(['friendRequests']);
           break;
           
         case 'block':
-          message.success('Đã chặn người dùng');
-          // Cập nhật lại danh sách bạn bè
           queryClient.invalidateQueries(['friends']);
           break;
 
         case 'unblock':
-          message.success('Đã bỏ chặn người dùng');
-          // Cập nhật lại danh sách bạn bè
           queryClient.invalidateQueries(['friends']);
           break;
         default:

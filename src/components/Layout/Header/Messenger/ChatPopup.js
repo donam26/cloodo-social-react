@@ -7,6 +7,7 @@ import { getTimeAgo } from "../../../../utils/time";
 import { useEffect, useRef, useState } from "react";
 import VideoCall from "../../../Messenger/VideoCall";
 import InputMessage from "../../../Messenger/InputMessage";
+import { Link } from "react-router-dom";
 
 const ChatPopup = ({ conversation, onClose }) => {
     const { data: messages } = useGetConversationById(conversation?.id);
@@ -122,9 +123,11 @@ const ChatPopup = ({ conversation, onClose }) => {
                             onClick={() => handleStartCall(true)}
                             className="flex items-center justify-center w-8 h-8 hover:bg-gray-100 rounded-full"
                         />
-                        <button className="p-2 hover:bg-gray-100 rounded-full">
-                            <MdOutlineZoomOutMap className="w-4 h-4" />
-                        </button>
+                        <Link to={`/messenger/${conversation?.id}`}>
+                            <button className="p-2 hover:bg-gray-100 rounded-full">
+                                <MdOutlineZoomOutMap className="w-4 h-4" />
+                            </button>
+                        </Link>
                         <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full">
                             <svg className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
                                 <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"/>
