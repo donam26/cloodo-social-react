@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import VideoCall from "../../../Messenger/VideoCall";
 import InputMessage from "../../../Messenger/InputMessage";
 import { Link } from "react-router-dom";
+import { useCreateChannel } from "../../../../hooks/meetHook";
 
 const ChatPopup = ({ conversation, onClose }) => {
     const { data: messages } = useGetConversationById(conversation?.id);
@@ -16,10 +17,20 @@ const ChatPopup = ({ conversation, onClose }) => {
     const messagesEndRef = useRef(null);
     const [isCallVisible, setIsCallVisible] = useState(false);
     const [isVideoCall, setIsVideoCall] = useState(true);
+    const [token, setToken] = useState(null);
+    const { mutate: createChannel } = useCreateChannel();
 
-    const handleStartCall = (isVideo = true) => {
-        setIsVideoCall(isVideo);
-        setIsCallVisible(true);
+    const handleStartCall = (video = false) => {
+        createChannel({
+            channelName: conversation?.id,
+            uid: userData?.user?.id,
+        }, {
+            onSuccess: (data) => {
+                setToken(data.token);
+                setIsVideoCall(video);
+                setIsCallVisible(true);
+            }
+        });
     };
 
     const handleEndCall = () => {
@@ -152,8 +163,8 @@ const ChatPopup = ({ conversation, onClose }) => {
                 visible={isCallVisible}
                 onClose={handleEndCall}
                 channelName={conversation?.id}
-                appId={"c73420e1c140447f9923ce6341de0d8f"}
-                token={"007eJxTYHgn+3eq7c7mSjXJt3WHtF4vPHvjxoPFvyvavBWPMn35LJipwJBsbmxiZJBqmGxoYmBiYp5maWlknJxqZmximJJqkGKR5h+3Jr0hkJGherEvMyMDBIL4KgymJqYWSUaJJrqJZilJuiYpKZa6lmkWFrrm5qnmJkbmhhZmJhYMDAC8Aijd"}
+                appId={process.env.REACT_APP_AGORA_APP_ID}
+                token={token}
                 isVideo={isVideoCall}
             />
         </>

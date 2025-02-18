@@ -168,7 +168,7 @@ export const privateRoutes = [
         }
     />,
     <Route
-        path="/group/:groupId"
+        path="/groups/:groupId"
         key="group"
         element={
             <PrivateWrapper>
