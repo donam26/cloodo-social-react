@@ -15,11 +15,6 @@ export const leaveGroup = async (groupId) => {
   return response.data;
 };
 
-export const getGroupParticipated = async () => {
-  const response = await axiosInstance.get(`/groups/participated`);
-  return response.data;
-};
-
 export const getGroupById = async (id) => {
   const response = await axiosInstance.get(`/groups/${id}`);
   return response.data;
@@ -42,6 +37,16 @@ export const removeMember = async (groupId, memberId) => {
 
 export const promoteAdmin = async (groupId, memberId) => {
   const response = await axiosInstance.post(`/groups/${groupId}/members/${memberId}/promote`);
+  return response.data;
+};
+
+export const getAdminGroups = async () => {
+  const response = await axiosInstance.get('/groups/manage');
+  return response.data;
+};
+
+export const getMemberGroups = async () => {
+  const response = await axiosInstance.get('/groups/participated');
   return response.data;
 };
 

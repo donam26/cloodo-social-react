@@ -69,14 +69,6 @@ const GroupsPage = () => {
               </div>
               <GroupSuggestions />
             </div>
-
-            <div className="bg-white rounded-xl shadow-sm p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-lg">Nhóm bạn quản lý</h3>
-                <Button type="text" icon={<FaCog />} />
-              </div>
-              {/* Add managed groups list here */}
-            </div>
           </div>
         </div>
       </div>

@@ -1,34 +1,26 @@
 import {
-  FaImages,
   FaUserFriends,
-  FaVideo,
   FaCompass,
-  FaRegCalendarAlt,
-  FaGamepad,
-  FaBookmark,
   FaSearch,
   FaBars,
   FaGlobeAsia,
   FaLock,
   FaEllipsisH,
 } from "react-icons/fa";
-import { MdGroups2 } from "react-icons/md";
-import { MessageOutlined } from "@ant-design/icons";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Avatar, Skeleton } from "antd";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Skeleton } from "antd";
 import { useSelector } from "react-redux";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Input, Button, Drawer, Dropdown } from "antd";
-import { useGetGroupParticipated } from "../../../hooks/groupHook";
+import { useGetMemberGroups } from "../../../hooks/groupHook";
 
 const SidebarGroup = () => {
-  const userData = useSelector((state) => state?.user?.user);
   const [showSidebar, setShowSidebar] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { data: groups, isLoading: isLoadingGroups } = useGetGroupParticipated();
+  const { data: groups, isLoading: isLoadingGroups } = useGetMemberGroups();
 
   const menuItems = [
     {
